@@ -1,10 +1,13 @@
 package com.github.vahundos.breezer.controller;
 
+import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
 import com.github.vahundos.breezer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +22,7 @@ public class UserRestController {
     }
 
     @PutMapping("/register")
-    public User register(@RequestBody User user) {
+    public User register(@RequestBody @Valid UserRegistrationDto user) {
         return service.register(user);
     }
 

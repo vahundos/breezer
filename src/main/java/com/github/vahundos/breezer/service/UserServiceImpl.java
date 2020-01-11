@@ -1,5 +1,6 @@
 package com.github.vahundos.breezer.service;
 
+import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.exception.DuplicateUserException;
 import com.github.vahundos.breezer.exception.EntityNotFoundException;
 import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
@@ -7,11 +8,14 @@ import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
 import com.github.vahundos.breezer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final ModelMapper modelMapper;
 
     private final UserRepository repository;
 
@@ -21,14 +25,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
-        if (repository.findByEmail(user.getEmail()).isPresent()) {
-            throw new DuplicateUserException("email", user.getEmail());
+    public User register(UserRegistrationDto userDto) {
+        if (repository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new DuplicateUserException("email", userDto.getEmail());
         }
-        if (repository.findByNickname(user.getNickname()).isPresent()) {
-            throw new DuplicateUserException("nickname", user.getNickname());
+        if (repository.findByNickname(userDto.getNickname()).isPresent()) {
+            throw new DuplicateUserException("nickname", userDto.getNickname());
         }
 
+        User user = modelMapper.map(userDto, User.class);
         user.setStatus(UserStatus.REGISTERED);
         return repository.save(user);
     }
