@@ -16,6 +16,6 @@ jobs:
     - name: Run tests with Maven
       run: mvn clean verify
     - name: Analyze with SonarCloud
-      run: mvn clean install && mvn verify sonar:sonar
+      run: mvn sonar:sonar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
