@@ -14,4 +14,8 @@ jobs:
       with:
         java-version: 11
     - name: Run tests with Maven
-      run: mvn clean test
+      run: mvn clean verify
+    - name: Analyze with SonarCloud
+      run: mvn clean install && mvn verify sonar:sonar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
