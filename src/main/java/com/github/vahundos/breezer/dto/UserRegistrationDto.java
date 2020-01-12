@@ -1,14 +1,17 @@
 package com.github.vahundos.breezer.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRegistrationDto {
@@ -25,8 +28,9 @@ public class UserRegistrationDto {
     @Size(min = 2, max = 20)
     private String nickname;
 
-    @NotNull
     @Email
+    @NotNull
+    @NotEmpty
     private String email;
 
     @NotNull

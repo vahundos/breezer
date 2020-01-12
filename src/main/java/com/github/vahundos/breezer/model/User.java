@@ -2,14 +2,12 @@ package com.github.vahundos.breezer.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.vahundos.breezer.view.UserViews;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor

@@ -57,7 +57,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void register_SavesUser_WhenEmailOrNicknameDontExist() {
+    void register_savesUser_WhenEmailOrNicknameDontExist() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(userRepository.findByNickname(any())).thenReturn(Optional.empty());
 
@@ -71,7 +71,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void register_ThrowsDuplicateUserException_WhenUserWithEmailAlreadyExists() {
+    void register_throwsDuplicateUserException_WhenUserWithEmailAlreadyExists() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
 
         DuplicateUserException exception = catchThrowableOfType(() -> userService.register(new UserRegistrationDto()),
@@ -81,7 +81,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void register_ThrowsDuplicateUserException_WhenUserWithNicknameAlreadyExists() {
+    void register_throwsDuplicateUserException_WhenUserWithNicknameAlreadyExists() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(userRepository.findByNickname(any())).thenReturn(Optional.of(new User()));
 
@@ -92,9 +92,9 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateStatus_SavesUser_WhenStatusIsNotRegistered() {
+    void updateStatus_tavesUser_WhenStatusIsNotRegistered() {
         var id = 1L;
-        var newUserStatus = UserStatus.ACTIVE;
+        var newUserStatus = UserStatus.ACTIVATED;
 
         when(userRepository.findById(id)).thenReturn(Optional.of(User.builder().id(id).build()));
         when(userRepository.save(any())).thenReturn(User.builder().id(id).status(newUserStatus).build());
@@ -105,7 +105,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateStatus_ThrowsIncompatibleUserStatusException_WhenStatusIsRegistered() {
+    void updateStatus_throwsIncompatibleUserStatusException_WhenStatusIsRegistered() {
         IncompatibleUserStatusException exception = catchThrowableOfType(() -> userService.updateStatus(1, UserStatus.REGISTERED),
                                                                          IncompatibleUserStatusException.class);
         assertThat(exception.getMessage()).isEqualTo("Can't change status to " + UserStatus.REGISTERED);
