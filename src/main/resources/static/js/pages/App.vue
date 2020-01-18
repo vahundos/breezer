@@ -4,33 +4,19 @@
             <v-toolbar-title>Page title</v-toolbar-title>
         </v-app-bar>
         <v-content>
-            Hello Vue
+            <v-container>
+                <user-registration-form/>
+            </v-container>
         </v-content>
     </v-app>
 </template>
 
 <script>
+    import UserRegistrationForm from "components/user/UserRegistrationForm.vue";
+
     export default {
         name: "App",
-        data() {
-            return {
-                form: {
-                    firstName: '',
-                    secondName: '',
-                    nickname: '',
-                    email: '',
-                    password: '',
-                    passwordConfirmation: ''
-                },
-                show: true
-            }
-        },
-        methods: {
-            onSubmit(evt) {
-                evt.preventDefault();
-                alert(JSON.stringify(this.form))
-            }
-        }
+        components: {UserRegistrationForm}
     }
 </script>
 
