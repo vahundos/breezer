@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar dark app>
+        <v-app-bar app>
             <v-toolbar-title>Page title</v-toolbar-title>
         </v-app-bar>
         <v-content>

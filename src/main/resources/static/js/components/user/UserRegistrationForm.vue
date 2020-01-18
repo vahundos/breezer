@@ -51,10 +51,22 @@
                 Register
             </v-btn>
         </v-layout>
+
+        <v-snackbar :timeout="0" v-model="this.snackbar.isShowing">
+            <v-icon color="success" v-if="this.snackbar.isSuccess">done</v-icon>
+            <v-icon color="error" v-else>warning</v-icon>
+
+            <span>{{this.snackbar.message}}</span>
+            <v-btn @click="snackbar.isShowing = false">
+                Close
+            </v-btn>
+        </v-snackbar>
     </v-form>
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "UserRegistrationForm",
         data() {
@@ -76,13 +88,40 @@
                 },
                 computed: {
                     passwordMatch: () => this.form.password === this.form.passwordConfirmation || 'Passwords are different'
+                },
+                snackbar: {
+                    isSuccess: false,
+                    isShowing: false,
+                    message: ''
                 }
             }
         },
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                alert(JSON.stringify(this.form))
+
+                axios.post('/users/register', JSON.stringify(this.form), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    this.snackbar.isSuccess = true;
+                    this.snackbar.message = "Registered successfully";
+                    this.snackbar.isShowing = true;
+                    console.log(response);
+                })
+                .catch(errorResponse => {
+                    this.snackbar.isSuccess = false;
+                    if (errorResponse.response.status === 400) {
+                        this.snackbar.message = errorResponse.response.data.message;
+                        console.log(errorResponse);
+                    } else {
+                        this.snackbar.message = 'Internal Server Error. Try later';
+                        console.log('Server error');
+                    }
+                    this.snackbar.isShowing = true;
+                });
             }
         }
     }
