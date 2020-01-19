@@ -1757,7 +1757,7 @@ axios@^0.19.1:
   dependencies:
     follow-redirects "1.5.10"
 
-babel-bridge@^1.12.11:
+babel-bridge@1.12.11:
   version "1.12.11"
   resolved "https://registry.yarnpkg.com/babel-bridge/-/babel-bridge-1.12.11.tgz#99574b5503bebbeb3c8d50b457d80dd34ada4a78"
   integrity sha512-TFN5SV/vPkVgIaGdRO5ui3hqIV3ElJ6rvsmoADaR8YVsN1hAxtyUlRerOul2mXwOFY6N8QewiPF+NPyk1PKIRQ==
@@ -1801,12 +1801,12 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
-babel-core@^7.0.0-bridge.0:
+babel-core@7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
   integrity sha512-poPX9mZH/5CSanm50Q+1toVci6pv5KSRv/5TWCwtzQS5XEwn40BcCrgIeMFWP9CKKIniKXNxoIOnOq4VVlGXhg==
 
-babel-jest@^24.9.0:
+babel-jest@24.9.0, babel-jest@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-24.9.0.tgz#3fc327cb8467b89d14d7bc70e315104a783ccd54"
   integrity sha512-ntuddfyiN+EhMw58PTNL1ph4C9rECiQXjI4nMMBKBaNjXvqLdkXpPRcMSr4iyBrJg/+wz9brFUD6RhOAT6r4Iw==
