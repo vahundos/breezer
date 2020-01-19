@@ -34,7 +34,7 @@ public class UserRestControllerTest {
         var id = 1L;
         when(userRestController.get(id)).thenThrow(new RuntimeException("Unexpected exception"));
 
-        mockMvc.perform(get("http://localhost/users/" + id))
+        mockMvc.perform(get("/users/" + id))
                .andDo(print())
                .andExpect(status().isInternalServerError());
     }
