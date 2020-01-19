@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +21,8 @@ public class MainExceptionHandler {
     private static final String ERROR_MESSAGE = "Exception occurred";
 
     @ExceptionHandler({DuplicateUserException.class, IncompatibleUserStatusException.class,
-                       MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
+                       MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class,
+                       HttpMediaTypeNotSupportedException.class})
     public ResponseEntity<ExceptionDetails> handleMethodArgumentNotValidException(Exception e) {
         log.error(ERROR_MESSAGE, e);
         return new ResponseEntity<>(new ExceptionDetails(e.getMessage()), HttpStatus.BAD_REQUEST);

@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(scripts = "/init-data.sql")
 class UserRestControllerIT {
 
-    private static final String BASE_URL = "http://localhost/users/";
+    private static final String BASE_URL = "/users/";
 
     @Autowired
     private MockMvc mockMvc;
