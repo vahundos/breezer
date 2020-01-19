@@ -4,6 +4,8 @@ target/
 !**/src/test/**
 node_modules
 *.log
+dist/
+coverage/
 
 ### IntelliJ IDEA ###
 .idea
