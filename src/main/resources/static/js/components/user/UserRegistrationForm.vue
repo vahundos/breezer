@@ -1,5 +1,5 @@
 <template>
-    <v-form>
+    <v-form ref="form">
         <v-text-field
                 label="First name"
                 outlined
@@ -47,7 +47,7 @@
         </v-row>
 
         <v-layout align-center justify-end>
-            <v-btn color="primary" @click="onSubmit">
+            <v-btn color="primary" @click.prevent="onSubmit">
                 Register
             </v-btn>
         </v-layout>
@@ -97,8 +97,10 @@
             }
         },
         methods: {
-            onSubmit(evt) {
-                evt.preventDefault();
+            onSubmit() {
+                if (!this.$refs.form.validate()) {
+                    return;
+                }
 
                 axios.post('/users/register', JSON.stringify(this.form), {
                     headers: {
