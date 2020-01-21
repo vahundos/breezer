@@ -5,7 +5,8 @@
                 outlined
                 v-model="form.firstName"
                 :rules="[rules.required]"
-                :error-messages="errors.firstName"/>
+                :error-messages="errors.firstName"
+                v-on:keydown="errors.firstName = []"/>
 
 
         <v-text-field
@@ -13,7 +14,8 @@
                 outlined
                 v-model="form.secondName"
                 :rules="[rules.required]"
-                :error-messages="errors.secondName"/>
+                :error-messages="errors.secondName"
+                v-on:keydown="errors.secondName = []"/>
 
 
         <v-text-field
@@ -21,15 +23,17 @@
                 outlined
                 v-model="form.nickname"
                 :rules="[rules.required]"
-                :error-messages="errors.nickname"/>
+                :error-messages="errors.nickname"
+                v-on:keydown="errors.nickname = []"/>
 
 
         <v-text-field
                 label="Email"
                 outlined
                 v-model="form.email"
-                :rules="[rules.required]"
-                :error-messages="errors.email"/>
+                :rules="[rules.required, rules.email]"
+                :error-messages="errors.email"
+                v-on:keydown="errors.email = []"/>
 
         <v-row>
             <v-col>
@@ -39,7 +43,8 @@
                         outlined
                         v-model="form.password"
                         :rules="[rules.required]"
-                        :error-messages="errors.password"/>
+                        :error-messages="errors.password"
+                        v-on:keydown="errors.password = []"/>
             </v-col>
             <v-col>
                 <v-text-field
@@ -48,7 +53,8 @@
                         outlined
                         v-model="form.passwordConfirmation"
                         :rules="[rules.required, computed.passwordMatch]"
-                        :error-messages="errors.passwordConfirmation"/>
+                        :error-messages="errors.passwordConfirmation"
+                        v-on:keydown="errors.passwordConfirmation = []"/>
             </v-col>
         </v-row>
 
