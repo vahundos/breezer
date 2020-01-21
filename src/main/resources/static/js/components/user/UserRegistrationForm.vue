@@ -134,9 +134,8 @@
                     console.log(response);
                 })
                 .catch(errorResponse => {
+                    console.error(errorResponse);
                     if (errorResponse.response.status === 400) {
-                        console.log(errorResponse);
-
                         for (const fieldError of errorResponse.response.data) {
                             this.errors[fieldError.fieldName] = fieldError.errors;
                         }
@@ -144,7 +143,6 @@
                         this.snackbar.isSuccess = false;
                         this.snackbar.isShowing = true;
                         this.snackbar.message = 'Internal Server Error. Try later';
-                        console.log('Server error');
                     }
                 });
             }
