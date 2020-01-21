@@ -24,8 +24,8 @@ public class MainExceptionHandler {
 
     private static final String ERROR_MESSAGE = "Exception occurred";
 
-    @ExceptionHandler({DuplicateUserException.class, IncompatibleUserStatusException.class,
-                       MethodArgumentTypeMismatchException.class, HttpMediaTypeNotSupportedException.class})
+    @ExceptionHandler({IncompatibleUserStatusException.class, MethodArgumentTypeMismatchException.class,
+                       HttpMediaTypeNotSupportedException.class})
     public ResponseEntity<ExceptionDetails> handleMethodArgumentNotValidException(Exception e) {
         log.error(ERROR_MESSAGE, e);
         return new ResponseEntity<>(new ExceptionDetails(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -34,6 +34,13 @@ public class MainExceptionHandler {
     public ResponseEntity<List<FieldErrors>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldErrorsContainer holder = new FieldErrorsContainer();
         e.getBindingResult().getFieldErrors().forEach(fieldError -> holder.add(fieldError.getField(), fieldError.getDefaultMessage()));
+        return new ResponseEntity<>(holder.getContainer(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<List<FieldErrors>> handleMethodArgumentNotValidException(DuplicateUserException e) {
+        FieldErrorsContainer holder = new FieldErrorsContainer();
+        holder.add(e.getDuplicateItem(), e.getMessage());
         return new ResponseEntity<>(holder.getContainer(), HttpStatus.BAD_REQUEST);
     }
 

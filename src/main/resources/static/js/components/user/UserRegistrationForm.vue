@@ -4,28 +4,32 @@
                 label="First name"
                 outlined
                 v-model="form.firstName"
-                :rules="[rules.required]"/>
+                :rules="[rules.required]"
+                :error-messages="errors.firstName"/>
 
 
         <v-text-field
                 label="Second name"
                 outlined
                 v-model="form.secondName"
-                :rules="[rules.required]"/>
+                :rules="[rules.required]"
+                :error-messages="errors.secondName"/>
 
 
         <v-text-field
                 label="Nickname"
                 outlined
                 v-model="form.nickname"
-                :rules="[rules.required]"/>
+                :rules="[rules.required]"
+                :error-messages="errors.nickname"/>
 
 
         <v-text-field
                 label="Email"
                 outlined
                 v-model="form.email"
-                :rules="[rules.required, rules.email]"/>
+                :rules="[rules.required]"
+                :error-messages="errors.email"/>
 
         <v-row>
             <v-col>
@@ -34,7 +38,8 @@
                         type="password"
                         outlined
                         v-model="form.password"
-                        :rules="[rules.required]"/>
+                        :rules="[rules.required]"
+                        :error-messages="errors.password"/>
             </v-col>
             <v-col>
                 <v-text-field
@@ -42,7 +47,8 @@
                         type="password"
                         outlined
                         v-model="form.passwordConfirmation"
-                        :rules="[rules.required, computed.passwordMatch]"/>
+                        :rules="[rules.required, computed.passwordMatch]"
+                        :error-messages="errors.passwordConfirmation"/>
             </v-col>
         </v-row>
 
@@ -79,6 +85,14 @@
                     password: '',
                     passwordConfirmation: ''
                 },
+                errors: {
+                    firstName: [],
+                    secondName: [],
+                    nickname: [],
+                    email: [],
+                    password: [],
+                    passwordConfirmation: []
+                },
                 rules: {
                     required: value => !!value || 'Required.',
                     email: value => {
@@ -114,15 +128,18 @@
                     console.log(response);
                 })
                 .catch(errorResponse => {
-                    this.snackbar.isSuccess = false;
                     if (errorResponse.response.status === 400) {
-                        this.snackbar.message = errorResponse.response.data.message;
                         console.log(errorResponse);
+
+                        for (const fieldError of errorResponse.response.data) {
+                            this.errors[fieldError.fieldName] = fieldError.errors;
+                        }
                     } else {
+                        this.snackbar.isSuccess = false;
+                        this.snackbar.isShowing = true;
                         this.snackbar.message = 'Internal Server Error. Try later';
                         console.log('Server error');
                     }
-                    this.snackbar.isShowing = true;
                 });
             }
         }
