@@ -1,5 +1,6 @@
 package com.github.vahundos.breezer.dto;
 
+import com.github.vahundos.breezer.constant.ValidationConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,11 @@ import javax.validation.constraints.*;
 public class UserRegistrationDto {
 
     @NotNull
-    @Size(min = 3, max = 20)
+    @Size(min = ValidationConstants.NAME_MIN_LENGTH, max = ValidationConstants.NAME_MAX_LENGTH)
     private String firstName;
 
     @NotNull
-    @Size(min = 3, max = 20)
+    @Size(min = ValidationConstants.NAME_MIN_LENGTH, max = ValidationConstants.NAME_MAX_LENGTH)
     private String secondName;
 
     @NotNull
@@ -32,6 +33,6 @@ public class UserRegistrationDto {
     private String email;
 
     @NotNull
-    @Size(min = 6, max = 50)
+    @Size(min = ValidationConstants.PASSWORD_MIN_LENGTH, max = ValidationConstants.PASSWORD_MAX_LENGTH)
     private String password;
 }

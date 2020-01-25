@@ -62,7 +62,7 @@ class UserRestControllerIT {
                .andDo(print())
                .andExpect(status().isNotFound())
                .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
-               .andExpect(jsonPath("$.message", equalTo("Entity with id = " + id + " not found")))
+               .andExpect(jsonPath("$.message", equalTo(String.format("User with id=%d not found", id))))
                .andReturn();
     }
 

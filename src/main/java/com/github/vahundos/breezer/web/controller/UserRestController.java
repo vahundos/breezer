@@ -1,6 +1,7 @@
 package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.github.vahundos.breezer.dto.UserLoginDto;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
@@ -24,6 +25,12 @@ public class UserRestController {
     @JsonView(UserViews.WithoutSensitiveData.class)
     public User get(@PathVariable long id) {
         return service.get(id);
+    }
+
+    @PostMapping("/login")
+    @JsonView(UserViews.WithoutSensitiveData.class)
+    public User login(@RequestBody @Valid UserLoginDto user) {
+        return service.login(user);
     }
 
     @PostMapping("/register")

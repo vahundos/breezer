@@ -53,7 +53,7 @@ class UserServiceImplTest {
         EntityNotFoundException exception = catchThrowableOfType(() -> userService.get(userId),
                                                                  EntityNotFoundException.class);
 
-        assertThat(exception.getMessage()).isEqualTo(String.format("Entity with id = %d not found", userId));
+        assertThat(exception.getMessage()).isEqualTo(String.format("User with id=%d not found", userId));
     }
 
     @Test
