@@ -79,27 +79,30 @@ class UserRestControllerIT {
 
     @ParameterizedTest
     @MethodSource("provideNotWellFormedUserFields")
-    void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser) throws Exception {
+    void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser, String fieldName) throws Exception {
         mockMvc.perform(post(BASE_URL + "register")
                                 .contentType(APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
                .andDo(print())
-               .andExpect(status().isBadRequest());
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$[0].fieldName", equalTo(fieldName))) ;
     }
 
     private static Stream<Arguments> provideNotWellFormedUserFields() {
         return Stream.of(
-                Arguments.of(new UserRegistrationDto(null, "secondName", "nickname", "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", null, "nickname", "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", null, "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", null, "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", null)),
-                Arguments.of(new UserRegistrationDto("", "secondName", "nickname", "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "", "nickname", "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "", "email@mail.net", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "", "password")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", "")),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email", "password"))
+                Arguments.of(new UserRegistrationDto(null, "secondName", "nickname", "email@mail.net", "password"), "firstName"),
+                Arguments.of(new UserRegistrationDto("firstName", null, "nickname", "email@mail.net", "password"), "secondName"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", null, "email@mail.net", "password"), "nickname"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", null, "password"), "email"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", null), "password"),
+                Arguments.of(new UserRegistrationDto("", "secondName", "nickname", "email@mail.net", "password"), "firstName"),
+                Arguments.of(new UserRegistrationDto("firstName", "", "nickname", "email@mail.net", "password"), "secondName"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "", "email@mail.net", "password"), "nickname"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "", "password"), "email"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", ""), "password"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email", "password"), "email"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "ivan.ivanov@mail.net", "password"), "email"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivan.ivanov", "email@mail.net", "password"), "nickname")
         );
     }
 
