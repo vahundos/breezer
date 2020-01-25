@@ -102,7 +102,8 @@ class UserRestControllerIT {
                 Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", ""), "password"),
                 Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email", "password"), "email"),
                 Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "ivan.ivanov@mail.net", "password"), "email"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivan.ivanov", "email@mail.net", "password"), "nickname")
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivanivanov", "email@mail.net", "password"), "nickname"),
+                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivan_not_well_formed", "email@mail.net", "password"), "nickname")
         );
     }
 

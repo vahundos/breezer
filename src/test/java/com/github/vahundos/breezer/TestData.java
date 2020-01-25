@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class TestData {
 
     public static User getUser1() {
-        return new User(1L, "Ivan", "Ivanov", "ivan.ivanov", "ivan.ivanov@mail.net", UserStatus.REGISTERED, "password1");
+        return new User(1L, "Ivan", "Ivanov", "ivanivanov", "ivan.ivanov@mail.net", UserStatus.REGISTERED, "password1");
     }
 
     public static UserRegistrationDto getUserForRegistration() {

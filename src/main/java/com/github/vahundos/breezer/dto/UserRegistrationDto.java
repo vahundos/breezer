@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @ToString
@@ -26,6 +23,7 @@ public class UserRegistrationDto {
 
     @NotNull
     @Size(min = 2, max = 20)
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "nickname should contain only letters and numbers")
     private String nickname;
 
     @Email

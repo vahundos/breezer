@@ -13,7 +13,7 @@ public class InitConfig {
     @Bean
     public CommandLineRunner dataLoader(UserRepository userRepository) {
         return (args -> {
-            userRepository.save(new User(null, "Ivan", "Ivanov", "ivanov.ivan", "ivanov@mail.net", UserStatus.REGISTERED, "password1"));
+            userRepository.save(new User(null, "Ivan", "Ivanov", "ivanovivan", "ivanov@mail.net", UserStatus.REGISTERED, "password1"));
             userRepository.save(new User(null, "Petro", "Petrov", "petro23", "petrvo@mail.net", UserStatus.ACTIVATED, "password2"));
         });
     }
