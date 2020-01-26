@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -43,7 +44,7 @@ class UserRestControllerIT {
 
     @Test
     void get_returnsUser_WhenUserExists() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "1"))
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "1").contentType(MediaType.APPLICATION_JSON))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
@@ -58,7 +59,7 @@ class UserRestControllerIT {
     @Test
     void get_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
         var id = 4L;
-        mockMvc.perform(get(BASE_URL + id))
+        mockMvc.perform(get(BASE_URL + id).contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
@@ -69,7 +70,7 @@ class UserRestControllerIT {
     @Test
     void register_createsAndReturnsRegisteredUserWithId() throws Exception {
         mockMvc.perform(post(BASE_URL + "register")
-                                .contentType(APPLICATION_JSON_VALUE)
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
                .andDo(print())
                .andExpect(status().isCreated())
@@ -81,7 +82,7 @@ class UserRestControllerIT {
     @MethodSource("provideNotWellFormedUserFields")
     void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser, String fieldName) throws Exception {
         mockMvc.perform(post(BASE_URL + "register")
-                                .contentType(APPLICATION_JSON_VALUE)
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
                .andDo(print())
                .andExpect(status().isBadRequest())
@@ -114,7 +115,7 @@ class UserRestControllerIT {
 
     @Test
     void activate_changesUserStatusToActivated() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/activate"))
+        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/activate").contentType(MediaType.APPLICATION_JSON))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andReturn();
@@ -128,7 +129,7 @@ class UserRestControllerIT {
 
     @Test
     void activate_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_URL + "abc/activate"))
+        mockMvc.perform(put(BASE_URL + "abc/activate").contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isBadRequest())
                .andReturn();
@@ -136,7 +137,7 @@ class UserRestControllerIT {
 
     @Test
     void activate_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_URL + "4/activate"))
+        mockMvc.perform(put(BASE_URL + "4/activate").contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andReturn();
@@ -144,7 +145,7 @@ class UserRestControllerIT {
 
     @Test
     void ban_changeUserStatusToBanned() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/ban"))
+        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/ban").contentType(MediaType.APPLICATION_JSON))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andReturn();
@@ -158,7 +159,7 @@ class UserRestControllerIT {
 
     @Test
     void ban_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_URL + "abc/ban"))
+        mockMvc.perform(put(BASE_URL + "abc/ban").contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isBadRequest())
                .andReturn();
@@ -166,7 +167,7 @@ class UserRestControllerIT {
 
     @Test
     void ban_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_URL + "4/ban"))
+        mockMvc.perform(put(BASE_URL + "4/ban").contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andReturn();
