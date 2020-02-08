@@ -1,5 +1,6 @@
 package com.github.vahundos.breezer.service;
 
+import com.github.vahundos.breezer.AuthorizedUser;
 import com.github.vahundos.breezer.dto.UserLoginDto;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.exception.DuplicateUserException;
@@ -12,6 +13,9 @@ import com.github.vahundos.breezer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import static java.lang.String.format;
@@ -19,7 +23,7 @@ import static java.lang.String.format;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final ModelMapper modelMapper;
 
@@ -74,5 +78,13 @@ public class UserServiceImpl implements UserService {
         User user = this.get(userId);
         user.setStatus(newStatus);
         return repository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = repository.findByNickname(username)
+                              .or(() -> repository.findByEmail(username))
+                              .orElseThrow(() -> new UsernameNotFoundException(format("User with username=%s", username)));
+        return new AuthorizedUser(user);
     }
 }

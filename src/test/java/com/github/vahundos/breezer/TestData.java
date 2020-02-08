@@ -6,11 +6,13 @@ import com.github.vahundos.breezer.model.UserStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestData {
 
     public static User getUser1() {
-        return new User(1L, "Ivan", "Ivanov", "ivanivanov", "ivan.ivanov@mail.net", UserStatus.REGISTERED, "password1");
+        return new User(1L, "Ivan", "Ivanov", "ivanivanov", "ivan.ivanov@mail.net", UserStatus.REGISTERED, "password1", new HashSet<>());
     }
 
     public static UserRegistrationDto getUserForRegistration() {

@@ -5,6 +5,7 @@ import com.github.vahundos.breezer.view.UserViews;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -37,4 +38,10 @@ public class User {
     private UserStatus status;
 
     private String password;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<UserRole> roles;
 }
