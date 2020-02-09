@@ -1,6 +1,7 @@
 package com.github.vahundos.breezer.config;
 
-import com.github.vahundos.breezer.web.filter.DenyBasicAuthenticationFilter;
+import com.github.vahundos.breezer.web.filter.BasicAuthenticationDenyFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,7 +10,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final BasicAuthenticationDenyFilter basicAuthenticationDenyFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -28,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf().disable();
 
-        http.addFilterBefore(new DenyBasicAuthenticationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(basicAuthenticationDenyFilter, BasicAuthenticationFilter.class);
         // @formatter:on
     }
 }
