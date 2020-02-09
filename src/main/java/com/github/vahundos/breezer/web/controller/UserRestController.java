@@ -1,7 +1,6 @@
 package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.github.vahundos.breezer.dto.UserLoginDto;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
@@ -12,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -30,9 +31,8 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    @JsonView(UserViews.WithoutSensitiveData.class)
-    public User login(@RequestBody @Valid UserLoginDto user) {
-        return service.login(user);
+    public Map<String, String> login(HttpSession httpSession) {
+        return Map.of("sessionId", httpSession.getId());
     }
 
     @PostMapping("/register")
