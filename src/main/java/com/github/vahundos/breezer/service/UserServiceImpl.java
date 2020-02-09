@@ -6,6 +6,7 @@ import com.github.vahundos.breezer.exception.DuplicateUserException;
 import com.github.vahundos.breezer.exception.EntityNotFoundException;
 import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
 import com.github.vahundos.breezer.model.User;
+import com.github.vahundos.breezer.model.UserRole;
 import com.github.vahundos.breezer.model.UserStatus;
 import com.github.vahundos.breezer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static java.lang.String.format;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final ModelMapper modelMapper;
 
     private final UserRepository repository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User get(long id) {
@@ -45,7 +49,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         User user = modelMapper.map(userDto, User.class);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setStatus(UserStatus.REGISTERED);
+        user.getRoles().add(UserRole.USER);
         return repository.save(user);
     }
 

@@ -5,6 +5,7 @@ import com.github.vahundos.breezer.view.UserViews;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -44,5 +45,5 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @JsonView(UserViews.WithoutSensitiveData.class)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserRole> roles;
+    private Set<UserRole> roles = new HashSet<>();
 }

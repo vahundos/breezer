@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.vahundos.breezer.TestData;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
+import com.github.vahundos.breezer.model.UserRole;
 import com.github.vahundos.breezer.model.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,8 @@ class UserRestControllerIT {
                .andDo(print())
                .andExpect(status().isCreated())
                .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
-               .andExpect(jsonPath("$.id", equalTo(3)));
+               .andExpect(jsonPath("$.id", equalTo(3)))
+               .andExpect(jsonPath("$.roles[0]", equalTo(UserRole.USER.name())));
     }
 
     @ParameterizedTest
@@ -112,7 +114,7 @@ class UserRestControllerIT {
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
                .andDo(print())
                .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$[0].fieldName", equalTo(fieldName))) ;
+               .andExpect(jsonPath("$[0].fieldName", equalTo(fieldName)));
     }
 
     private static Stream<Arguments> provideNotWellFormedUserFields() {

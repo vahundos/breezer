@@ -7,6 +7,7 @@ import com.github.vahundos.breezer.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -14,12 +15,12 @@ import java.util.Set;
 public class DataInitializer {
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository) {
+    public CommandLineRunner dataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return (args -> {
             userRepository.save(new User(null, "Ivan", "Ivanov", "ivanovivan", "ivanov@mail.net", UserStatus.ACTIVATED,
-                                         "{noop}password1", Set.of(UserRole.USER, UserRole.ADMIN)));
+                                         passwordEncoder.encode("password1"), Set.of(UserRole.USER, UserRole.ADMIN)));
             userRepository.save(new User(null, "Petro", "Petrov", "petro23", "petrvo@mail.net", UserStatus.ACTIVATED,
-                                         "{noop}password2", Set.of(UserRole.USER)));
+                                         passwordEncoder.encode("password2"), Set.of(UserRole.USER)));
         });
     }
 }

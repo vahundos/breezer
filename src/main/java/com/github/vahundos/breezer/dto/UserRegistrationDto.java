@@ -9,9 +9,9 @@ import lombok.ToString;
 import javax.validation.constraints.*;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "password")
 public class UserRegistrationDto {
 
     @NotNull
