@@ -1,12 +1,10 @@
 package com.github.vahundos.breezer.service;
 
 import com.github.vahundos.breezer.AuthorizedUser;
-import com.github.vahundos.breezer.dto.UserLoginDto;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.exception.DuplicateUserException;
 import com.github.vahundos.breezer.exception.EntityNotFoundException;
 import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
-import com.github.vahundos.breezer.exception.InvalidCredentialsException;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
 import com.github.vahundos.breezer.repository.UserRepository;
@@ -34,24 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.debug("Getting user by id={}", id);
         return repository.findById(id)
                          .orElseThrow(() -> new EntityNotFoundException(format("User with id=%d not found", id)));
-    }
-
-    @Override
-    public User login(UserLoginDto userDto) {
-        String login = userDto.getLogin();
-        String password = userDto.getPassword();
-        log.debug("Trying login user with login={} and password={}", login, password);
-
-        User user = repository.findByNickname(login)
-                              .or(() -> repository.findByEmail(login))
-                              .orElseThrow(() -> new EntityNotFoundException(format("User not found by login=%s and password=%s",
-                                                                                    login, password)));
-        if (user.getPassword().equals(password)) {
-            return user;
-        }
-
-        throw new InvalidCredentialsException(format("Can't auth with login=%s and password=%s", login,
-                                                     password));
     }
 
     @Override

@@ -42,6 +42,7 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
+    @JsonView(UserViews.WithoutSensitiveData.class)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<UserRole> roles;
 }

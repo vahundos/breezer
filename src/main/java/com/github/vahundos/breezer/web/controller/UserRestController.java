@@ -19,8 +19,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/users", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users", produces = APPLICATION_JSON_VALUE)
 public class UserRestController {
+
+    public static final String AUTH_TOKEN = "authToken";
 
     private final UserService service;
 
@@ -32,10 +34,10 @@ public class UserRestController {
 
     @PostMapping("/login")
     public Map<String, String> login(HttpSession httpSession) {
-        return Map.of("sessionId", httpSession.getId());
+        return Map.of(AUTH_TOKEN, httpSession.getId());
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     @JsonView(UserViews.WithoutSensitiveData.class)
     public ResponseEntity<User> register(@RequestBody @Valid UserRegistrationDto user) {
         return new ResponseEntity<>(service.register(user), HttpStatus.CREATED);

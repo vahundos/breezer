@@ -1,11 +1,13 @@
 package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.vahundos.breezer.TestData;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,11 +22,16 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.github.vahundos.breezer.TestData.PASSWORD;
+import static com.github.vahundos.breezer.TestData.USERNAME;
+import static com.github.vahundos.breezer.web.controller.UserRestController.AUTH_TOKEN;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(scripts = "/init-data.sql")
 class UserRestControllerIT {
 
+    private static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
+
     private static final String BASE_URL = "/users/";
 
     @Autowired
@@ -42,9 +51,23 @@ class UserRestControllerIT {
 
     private ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+    private String authToken;
+
+    @BeforeEach
+    public void setup() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URL + "login").with(httpBasic(USERNAME, PASSWORD)))
+                                          .andExpect(status().isOk())
+                                          .andReturn();
+
+        Map<String, String> responseMap = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                                                                 new TypeReference<>() {});
+        this.authToken = responseMap.get(AUTH_TOKEN);
+    }
+
     @Test
     void get_returnsUser_WhenUserExists() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "1").contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "1").contentType(MediaType.APPLICATION_JSON)
+                                                                 .header(HEADER_X_AUTH_TOKEN, authToken))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
@@ -59,7 +82,8 @@ class UserRestControllerIT {
     @Test
     void get_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
         var id = 4L;
-        mockMvc.perform(get(BASE_URL + id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(BASE_URL + id).contentType(MediaType.APPLICATION_JSON)
+                                          .header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
@@ -71,6 +95,7 @@ class UserRestControllerIT {
     void register_createsAndReturnsRegisteredUserWithId() throws Exception {
         mockMvc.perform(post(BASE_URL + "register")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header(HEADER_X_AUTH_TOKEN, authToken)
                                 .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
                .andDo(print())
                .andExpect(status().isCreated())
@@ -83,6 +108,7 @@ class UserRestControllerIT {
     void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser, String fieldName) throws Exception {
         mockMvc.perform(post(BASE_URL + "register")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .header(HEADER_X_AUTH_TOKEN, authToken)
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
                .andDo(print())
                .andExpect(status().isBadRequest())
@@ -115,7 +141,8 @@ class UserRestControllerIT {
 
     @Test
     void activate_changesUserStatusToActivated() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/activate").contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/activate").contentType(MediaType.APPLICATION_JSON)
+                                                                          .header(HEADER_X_AUTH_TOKEN, authToken))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andReturn();
@@ -129,7 +156,8 @@ class UserRestControllerIT {
 
     @Test
     void activate_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_URL + "abc/activate").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(BASE_URL + "abc/activate").contentType(MediaType.APPLICATION_JSON)
+                                                      .header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isBadRequest())
                .andReturn();
@@ -137,7 +165,8 @@ class UserRestControllerIT {
 
     @Test
     void activate_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_URL + "4/activate").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(BASE_URL + "4/activate").contentType(MediaType.APPLICATION_JSON)
+                                                    .header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andReturn();
@@ -145,7 +174,8 @@ class UserRestControllerIT {
 
     @Test
     void ban_changeUserStatusToBanned() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/ban").contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = mockMvc.perform(put(BASE_URL + "1/ban").contentType(MediaType.APPLICATION_JSON)
+                                                                     .header(HEADER_X_AUTH_TOKEN, authToken))
                                      .andDo(print())
                                      .andExpect(status().isOk())
                                      .andReturn();
@@ -159,7 +189,8 @@ class UserRestControllerIT {
 
     @Test
     void ban_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_URL + "abc/ban").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(BASE_URL + "abc/ban").contentType(MediaType.APPLICATION_JSON)
+                                                 .header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isBadRequest())
                .andReturn();
@@ -167,7 +198,8 @@ class UserRestControllerIT {
 
     @Test
     void ban_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_URL + "4/ban").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(BASE_URL + "4/ban").contentType(MediaType.APPLICATION_JSON)
+                                               .header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isNotFound())
                .andReturn();

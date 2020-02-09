@@ -16,8 +16,10 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner dataLoader(UserRepository userRepository) {
         return (args -> {
-            userRepository.save(new User(null, "Ivan", "Ivanov", "ivanovivan", "ivanov@mail.net", UserStatus.REGISTERED, "{noop}password1", Set.of(UserRole.USER, UserRole.ADMIN)));
-            userRepository.save(new User(null, "Petro", "Petrov", "petro23", "petrvo@mail.net", UserStatus.ACTIVATED, "{noop}password2", Set.of(UserRole.USER)));
+            userRepository.save(new User(null, "Ivan", "Ivanov", "ivanovivan", "ivanov@mail.net", UserStatus.ACTIVATED,
+                                         "{noop}password1", Set.of(UserRole.USER, UserRole.ADMIN)));
+            userRepository.save(new User(null, "Petro", "Petrov", "petro23", "petrvo@mail.net", UserStatus.ACTIVATED,
+                                         "{noop}password2", Set.of(UserRole.USER)));
         });
     }
 }
