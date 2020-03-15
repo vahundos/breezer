@@ -1,21 +1,23 @@
 <template>
     <v-form ref="form">
+
         <v-text-field
                 label="Login"
-                outlined
                 v-model="form.login"
-                :rules="[rules.required]"
+                outlined
                 :error-messages="errors.login"
-                v-on:keydown="errors.login = []"/>
+                @input="fieldErrors('login')"
+                @blur="fieldErrors('login')"/>
 
         <v-text-field
                 label="Password"
                 type="password"
-                outlined
                 v-model="form.password"
-                :rules="[rules.required]"
+                outlined
                 :error-messages="errors.password"
-                v-on:keydown="errors.password = []"/>
+                @input="fieldErrors('password')"
+                @blur="fieldErrors('password')"
+                />
 
         <v-layout align-center justify-end>
             <v-btn color="primary" @click.prevent="onSubmit">
@@ -37,6 +39,7 @@
 
 <script>
     import axios from 'axios'
+    import {maxLength, minLength, required} from 'vuelidate/lib/validators'
 
     export default {
         name: "UserLoginForm",
@@ -50,13 +53,6 @@
                     login: [],
                     password: []
                 },
-                rules: {
-                    required: value => !!value || 'Required.',
-                    email: value => {
-                        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                        return pattern.test(value) || 'Invalid e-mail.'
-                    }
-                },
                 snackbar: {
                     isSuccess: false,
                     isShowing: false,
@@ -64,7 +60,41 @@
                 }
             }
         },
+        validations: {
+            form: {
+                login: {
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(20)
+                },
+                password: {
+                    required,
+                    minLength: minLength(6),
+                    maxLength: maxLength(50)
+                }
+            }
+        },
         methods: {
+            fieldErrors(paramName) {
+                this.$v.form[paramName].$touch();
+
+                const errorMessages = [];
+                if (this.$v.form[paramName].$error) {
+                    if (this.$v.form[paramName].required != null && !this.$v.form[paramName].required) {
+                        errorMessages.push('Field is required');
+                    }
+
+                    if (this.$v.form[paramName].minLength != null && !this.$v.form[paramName].minLength) {
+                        errorMessages.push('Min length is ' + this.$v.form[paramName].$params.minLength.min);
+                    }
+
+                    if (this.$v.form[paramName].maxLength != null && !this.$v.form[paramName].maxLength) {
+                        errorMessages.push('Max length is ' + this.$v.form[paramName].$params.maxLength.max);
+                    }
+                }
+
+                this.errors[paramName] = errorMessages;
+            },
             onSubmit() {
                 if (!this.$refs.form.validate()) {
                     return;
@@ -75,26 +105,26 @@
                         'Authorization': 'Basic ' + btoa(`${this.form.login}:${this.form.password}`)
                     }
                 })
-                .then(response => {
-                    this.snackbar.isSuccess = true;
-                    this.snackbar.message = "Login successfully";
-                    this.snackbar.isShowing = true;
-                    console.log(response);
-
-                    console.log('Auth token is ' + response.data.authToken);
-                })
-                .catch(errorResponse => {
-                    console.error(errorResponse);
-                    if (errorResponse.response.status === 400) {
-                        for (const fieldError of errorResponse.response.data) {
-                            this.errors[fieldError.fieldName] = fieldError.errors;
-                        }
-                    } else {
-                        this.snackbar.isSuccess = false;
+                    .then(response => {
+                        this.snackbar.isSuccess = true;
+                        this.snackbar.message = "Login successfully";
                         this.snackbar.isShowing = true;
-                        this.snackbar.message = 'Internal Server Error. Try later';
-                    }
-                });
+                        console.log(response);
+
+                        console.log('Auth token is ' + response.data.authToken);
+                    })
+                    .catch(errorResponse => {
+                        console.error(errorResponse);
+                        if (errorResponse.response.status === 400) {
+                            for (const fieldError of errorResponse.response.data) {
+                                this.errors[fieldError.fieldName] = fieldError.errors;
+                            }
+                        } else {
+                            this.snackbar.isSuccess = false;
+                            this.snackbar.isShowing = true;
+                            this.snackbar.message = 'Internal Server Error. Try later';
+                        }
+                    });
             }
         }
     }

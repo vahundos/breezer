@@ -6,8 +6,6 @@
         <v-content>
             <v-container>
                 <user-login-form/>
-                <br/>
-                <user-registration-form/>
             </v-container>
         </v-content>
     </v-app>
