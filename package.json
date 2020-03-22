@@ -18,9 +18,7 @@
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
-    "moduleNameMapper": {
-      "@/(.*)$": "<rootDir>/src/main/resources/static/js/$1"
-    },
+    "modulePaths": ["<rootDir>/src/main/resources/static/js"],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/main/resources/static/js/**/*.{js,vue}",
