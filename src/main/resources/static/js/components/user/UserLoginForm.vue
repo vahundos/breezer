@@ -40,6 +40,7 @@
 <script>
     import axios from 'axios'
     import {maxLength, minLength, required} from 'vuelidate/lib/validators'
+    import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
 
     export default {
         name: "UserLoginForm",
@@ -77,23 +78,7 @@
         methods: {
             fieldErrors(paramName) {
                 this.$v.form[paramName].$touch();
-
-                const errorMessages = [];
-                if (this.$v.form[paramName].$error) {
-                    if (this.$v.form[paramName].required != null && !this.$v.form[paramName].required) {
-                        errorMessages.push('Field is required');
-                    }
-
-                    if (this.$v.form[paramName].minLength != null && !this.$v.form[paramName].minLength) {
-                        errorMessages.push('Min length is ' + this.$v.form[paramName].$params.minLength.min);
-                    }
-
-                    if (this.$v.form[paramName].maxLength != null && !this.$v.form[paramName].maxLength) {
-                        errorMessages.push('Max length is ' + this.$v.form[paramName].$params.maxLength.max);
-                    }
-                }
-
-                this.errors[paramName] = errorMessages;
+                this.errors[paramName] = getErrorMessagesForParam(this.$v.form, paramName);
             },
             onSubmit() {
                 if (!this.$refs.form.validate()) {
