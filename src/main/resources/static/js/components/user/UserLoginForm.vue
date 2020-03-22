@@ -81,7 +81,8 @@
                 this.errors[paramName] = getErrorMessagesForParam(this.$v.form, paramName);
             },
             onSubmit() {
-                if (!this.$refs.form.validate()) {
+                this.$v.form.$touch();
+                if (this.$v.form.$anyError) {
                     return;
                 }
 
