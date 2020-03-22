@@ -37,9 +37,9 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import {maxLength, minLength, required} from 'vuelidate/lib/validators'
     import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
+    import UserService from 'service/userService'
 
     export default {
         name: "UserLoginForm",
@@ -86,18 +86,11 @@
                     return;
                 }
 
-                axios.post('/users/login', '', {
-                    headers: {
-                        'Authorization': 'Basic ' + btoa(`${this.form.login}:${this.form.password}`)
-                    }
-                })
-                    .then(response => {
+                UserService.login(this.form.login, this.form.password)
+                    .then(() => {
                         this.snackbar.isSuccess = true;
                         this.snackbar.message = "Login successfully";
                         this.snackbar.isShowing = true;
-                        console.log(response);
-
-                        console.log('Auth token is ' + response.data.authToken);
                     })
                     .catch(errorResponse => {
                         console.error(errorResponse);
