@@ -21,6 +21,10 @@ public class DataInitializer {
                                          passwordEncoder.encode("password1"), Set.of(UserRole.USER, UserRole.ADMIN)));
             userRepository.save(new User(null, "Petro", "Petrov", "petro23", "petrvo@mail.net", UserStatus.ACTIVATED,
                                          passwordEncoder.encode("password2"), Set.of(UserRole.USER)));
+            userRepository.save(new User(null, "Dmytro", "Dmytrov", "dima23", "dmytro@mail.net", UserStatus.BANNED,
+                                         passwordEncoder.encode("password3"), Set.of(UserRole.USER)));
+            userRepository.save(new User(null, "Semen", "Semenov", "semen1", "semen@mail.net", UserStatus.REGISTERED,
+                                         passwordEncoder.encode("password4"), Set.of(UserRole.USER)));
         });
     }
 }

@@ -15,6 +15,12 @@ public class TestData {
     public static final String USERNAME = "ivanivanov";
     public static final String PASSWORD = "password1";
 
+    public static final String USERNAME_BANNED = "dima23";
+    public static final String PASSWORD_BANNED = "password3";
+
+    public static final String USERNAME_NOT_ACTIVATED = "semen1";
+    public static final String PASSWORD_NOT_ACTIVATED = "password4";
+
     public static User getUser1() {
         return new User(1L, "Ivan", "Ivanov", USERNAME, "ivan.ivanov@mail.net", UserStatus.ACTIVATED, PASSWORD,
                         Set.of(UserRole.USER, UserRole.ADMIN));

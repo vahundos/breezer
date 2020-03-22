@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
+        log.debug("Loading user by username={}", username);
         User user = repository.findByNickname(username)
                               .or(() -> repository.findByEmail(username))
                               .orElseThrow(() -> new UsernameNotFoundException(format("User with username=%s", username)));
