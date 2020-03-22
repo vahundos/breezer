@@ -16,8 +16,7 @@
                 outlined
                 :error-messages="errors.password"
                 @input="fieldErrors('password')"
-                @blur="fieldErrors('password')"
-                />
+                @blur="fieldErrors('password')"/>
 
         <v-layout align-center justify-end>
             <v-btn color="primary" @click.prevent="onSubmit">
@@ -82,7 +81,8 @@
             },
             onSubmit() {
                 this.$v.form.$touch();
-                if (this.$v.form.$anyError) {
+                if (this.$v.form.$invalid) {
+                    console.log('Form is not-well formed');
                     return;
                 }
 
