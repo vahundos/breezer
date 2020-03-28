@@ -37,6 +37,11 @@ public class UserRestController {
         return Map.of(AUTH_TOKEN, httpSession.getId());
     }
 
+    @PostMapping("/logout")
+    public void logout(HttpSession httpSession) {
+        httpSession.invalidate();
+    }
+
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     @JsonView(UserViews.WithoutSensitiveData.class)
     public ResponseEntity<User> register(@RequestBody @Valid UserRegistrationDto user) {

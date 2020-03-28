@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.vahundos.breezer.TestData;
+import com.github.vahundos.breezer.UserFieldsName;
+import com.github.vahundos.breezer.WellFormedUserData;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserRole;
@@ -51,6 +53,9 @@ class UserRestControllerIT {
             "only for POST /users/login";
 
     private static final String BASE_PATH = "/users/";
+    private static final String LOGIN_BASE_PATH = BASE_PATH + "login";
+
+    private static final String MESSAGE_JSON_PATH = "$.message";
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,7 +66,7 @@ class UserRestControllerIT {
 
     @BeforeEach
     public void setup() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(post(BASE_PATH + "login").with(httpBasic(USERNAME, PASSWORD)))
+        MvcResult mvcResult = this.mockMvc.perform(post(LOGIN_BASE_PATH).with(httpBasic(USERNAME, PASSWORD)))
                                           .andExpect(status().isOk())
                                           .andReturn();
 
@@ -92,7 +97,7 @@ class UserRestControllerIT {
                 new String(Base64.getEncoder().encode("user:password".getBytes()))))
                .andDo(print())
                .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$.message", equalTo(BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE)));
+               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE)));
     }
 
     @Test
@@ -103,7 +108,7 @@ class UserRestControllerIT {
                .andDo(print())
                .andExpect(status().isNotFound())
                .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
-               .andExpect(jsonPath("$.message", equalTo(String.format("User with id=%d not found", id))))
+               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(String.format("User with id=%d not found", id))))
                .andReturn();
     }
 
@@ -134,25 +139,67 @@ class UserRestControllerIT {
 
     private static Stream<Arguments> provideNotWellFormedUserFields() {
         return Stream.of(
-                Arguments.of(new UserRegistrationDto(null, "secondName", "nickname", "email@mail.net", "password"), "firstName"),
-                Arguments.of(new UserRegistrationDto("firstName", null, "nickname", "email@mail.net", "password"), "secondName"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", null, "email@mail.net", "password"), "nickname"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", null, "password"), "email"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", null), "password"),
-                Arguments.of(new UserRegistrationDto("", "secondName", "nickname", "email@mail.net", "password"), "firstName"),
-                Arguments.of(new UserRegistrationDto("firstName", "", "nickname", "email@mail.net", "password"), "secondName"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "", "email@mail.net", "password"), "nickname"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "", "password"), "email"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email@mail.net", ""), "password"),
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "email", "password"), "email"),
+                Arguments.of(new UserRegistrationDto(null, WellFormedUserData.SECOND_NAME, WellFormedUserData.NICKNAME,
+                                                     WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.FIRST_NAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, null, WellFormedUserData.NICKNAME,
+                                                     WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.SECOND_NAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     null, WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.NICKNAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, null, WellFormedUserData.PASSWORD),
+                             UserFieldsName.EMAIL),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, WellFormedUserData.EMAIL, null),
+                             UserFieldsName.PASSWORD),
+
+                Arguments.of(new UserRegistrationDto("", WellFormedUserData.SECOND_NAME, WellFormedUserData.NICKNAME,
+                                                     WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.FIRST_NAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, "", WellFormedUserData.NICKNAME,
+                                                     WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.SECOND_NAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME, "",
+                                                     WellFormedUserData.EMAIL, WellFormedUserData.PASSWORD),
+                             UserFieldsName.NICKNAME),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, "", WellFormedUserData.PASSWORD),
+                             UserFieldsName.EMAIL),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, WellFormedUserData.EMAIL, ""),
+                             UserFieldsName.PASSWORD),
+
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, "not-well-formed-email",
+                                                     WellFormedUserData.PASSWORD),
+                             UserFieldsName.EMAIL),
 
                 // email already exists
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "nickname", "ivan.ivanov@mail.net", "password"), "email"),
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     WellFormedUserData.NICKNAME, getUser1().getEmail(),
+                                                     WellFormedUserData.PASSWORD),
+                             UserFieldsName.EMAIL),
 
                 // nickname already exists
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivanivanov", "email@mail.net", "password"), "nickname"),
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME,WellFormedUserData.SECOND_NAME,
+                                                     getUser1().getNickname(), WellFormedUserData.EMAIL,
+                                                     WellFormedUserData.PASSWORD),
+                             UserFieldsName.NICKNAME),
 
-                Arguments.of(new UserRegistrationDto("firstName", "secondName", "ivan_not_well_formed", "email@mail.net", "password"), "nickname")
+                Arguments.of(new UserRegistrationDto(WellFormedUserData.FIRST_NAME, WellFormedUserData.SECOND_NAME,
+                                                     "ivan_not_well_formed", WellFormedUserData.EMAIL,
+                                                     WellFormedUserData.PASSWORD),
+                             UserFieldsName.NICKNAME)
         );
     }
 
@@ -224,21 +271,32 @@ class UserRestControllerIT {
 
     @Test
     void login_returnsBadRequest_WhenRequestContainsBasicAuthenticationOnGetHttpMethod() throws Exception {
-        mockMvc.perform(get(BASE_PATH + "login").with(httpBasic(USERNAME, PASSWORD)))
+        mockMvc.perform(get(LOGIN_BASE_PATH).with(httpBasic(USERNAME, PASSWORD)))
                .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$.message", equalTo(BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE)))
+               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE)))
                .andReturn();
     }
 
     @Test
     void login_returnsUnauthorized_WhenUserIsBanned() throws Exception {
-        mockMvc.perform(post(BASE_PATH + "login").with(httpBasic(USERNAME_BANNED, PASSWORD_BANNED)))
+        mockMvc.perform(post(LOGIN_BASE_PATH).with(httpBasic(USERNAME_BANNED, PASSWORD_BANNED)))
                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void login_returnsUnauthorized_WhenUserIsNotActivated() throws Exception {
-        mockMvc.perform(post(BASE_PATH + "login").with(httpBasic(USERNAME_NOT_ACTIVATED, PASSWORD_NOT_ACTIVATED)))
+        mockMvc.perform(post(LOGIN_BASE_PATH).with(httpBasic(USERNAME_NOT_ACTIVATED, PASSWORD_NOT_ACTIVATED)))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void logout_invalidatesUserSession_WhenSessionActive() throws Exception {
+        mockMvc.perform(post(BASE_PATH + "logout").header(HEADER_X_AUTH_TOKEN, authToken))
+               .andDo(print())
+               .andExpect(status().isOk());
+
+        mockMvc.perform(get(BASE_PATH + "1").header(HEADER_X_AUTH_TOKEN, authToken))
+               .andDo(print())
                .andExpect(status().isUnauthorized());
     }
 }
