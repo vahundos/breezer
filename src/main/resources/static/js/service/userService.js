@@ -3,10 +3,12 @@ import axios from 'axios'
 const USER_TOKEN = 'user-token';
 const X_AUTH_TOKEN_HEADER = 'X-Auth-Token';
 
+const REMOTE_SERVICE_BASE_PATH = '/users';
+
 export default class UserService {
 
     static login(username, password) {
-        return axios.post('/users/login', '', {
+        return axios.post(REMOTE_SERVICE_BASE_PATH + '/login', '', {
             headers: {
                 'Authorization': 'Basic ' + btoa(`${username}:${password}`)
             }
@@ -19,8 +21,10 @@ export default class UserService {
     }
 
     static logout() {
-        // TODO implement call to backend for invalidation auth token
-        localStorage.removeItem(USER_TOKEN);
-        delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER];
+        return axios.post(REMOTE_SERVICE_BASE_PATH + '/logout', '')
+            .then(() => {
+                localStorage.removeItem(USER_TOKEN);
+                delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER];
+            });
     }
 }
