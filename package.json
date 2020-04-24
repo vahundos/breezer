@@ -43,7 +43,7 @@
     "babel-bridge": "1.12.11",
     "babel-jest": "25.1.0",
     "babel-loader": "8.0.6",
-    "css-loader": "3.4.2",
+    "css-loader": "3.5.3",
     "deepmerge": "4.2.2",
     "fibers": "4.0.2",
     "jest": "25.1.0",
