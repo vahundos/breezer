@@ -43,7 +43,7 @@
     "babel-loader": "8.1.0",
     "css-loader": "3.4.2",
     "deepmerge": "4.2.2",
-    "fibers": "4.0.2",
+    "fibers": "5.0.0",
     "jest": "25.1.0",
     "sass": "1.26.5",
     "sass-loader": "8.0.2",
