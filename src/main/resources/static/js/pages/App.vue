@@ -2,13 +2,13 @@
     <v-app>
         <v-app-bar app>
             <v-toolbar-title>Page title</v-toolbar-title>
-            <v-btn v-if="userToken" absolute right icon @click.prevent="logout">
+            <v-btn v-if="this.$store.state.userAuthToken" absolute right icon @click.prevent="userLogout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
         </v-app-bar>
         <v-content>
             <v-container>
-                <user-login-form/>
+                <user-login-form v-if="!this.$store.state.userAuthToken"/>
             </v-container>
         </v-content>
     </v-app>
@@ -17,20 +17,13 @@
 <script>
     import UserLoginForm from "components/user/UserLoginForm.vue";
     import UserRegistrationForm from "components/user/UserRegistrationForm.vue";
-    import UserService from "service/userService";
+    import { mapActions } from 'vuex'
 
     export default {
         name: "App",
         components: {UserLoginForm, UserRegistrationForm},
         methods: {
-            logout: function () {
-                UserService.logout();
-            }
-        },
-        computed: {
-            userToken: function () {
-                return localStorage.getItem('user-token');
-            }
+            ...mapActions(['userLogout'])
         }
     }
 </script>

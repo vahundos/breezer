@@ -7,24 +7,29 @@ const REMOTE_SERVICE_BASE_PATH = '/users';
 
 export default class UserService {
 
-    static login(username, password) {
-        return axios.post(REMOTE_SERVICE_BASE_PATH + '/login', '', {
+    static async login(username, password) {
+        const response = await axios.post(REMOTE_SERVICE_BASE_PATH + '/login', '', {
             headers: {
                 'Authorization': 'Basic ' + btoa(`${username}:${password}`)
             }
-        })
-            .then(response => {
-                const authToken = response.data.authToken;
-                localStorage.setItem(USER_TOKEN, authToken);
-                axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = authToken
-            })
+        });
+
+        const authToken = response.data.authToken;
+        localStorage.setItem(USER_TOKEN, authToken);
+        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = authToken;
+        return authToken;
     }
 
-    static logout() {
-        return axios.post(REMOTE_SERVICE_BASE_PATH + '/logout', '')
-            .then(() => {
-                localStorage.removeItem(USER_TOKEN);
-                delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER];
-            });
+    static async logout() {
+        await axios.post(REMOTE_SERVICE_BASE_PATH + '/logout', '');
+        localStorage.removeItem(USER_TOKEN);
+        delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER];
+    }
+
+    static loadAuthTokenFromStorage() {
+        let userToken = localStorage.getItem(USER_TOKEN);
+        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = userToken;
+
+        return userToken;
     }
 }

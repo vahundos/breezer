@@ -39,7 +39,7 @@
 <script>
     import {maxLength, minLength, required} from 'vuelidate/lib/validators'
     import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
-    import UserService from 'service/userService'
+    import { mapActions } from 'vuex'
 
     export default {
         name: "UserLoginForm",
@@ -75,6 +75,7 @@
             }
         },
         methods: {
+            ...mapActions(['userLogin']),
             fieldErrors(paramName) {
                 this.$v.form[paramName].$touch();
                 this.errors[paramName] = getErrorMessagesForParam(this.$v.form, paramName);
@@ -86,24 +87,9 @@
                     return;
                 }
 
-                UserService.login(this.form.login, this.form.password)
-                    .then(() => {
-                        this.snackbar.isSuccess = true;
-                        this.snackbar.message = "Login successfully";
-                        this.snackbar.isShowing = true;
-                    })
-                    .catch(errorResponse => {
-                        console.error(errorResponse);
-                        if (errorResponse.response.status === 400) {
-                            for (const fieldError of errorResponse.response.data) {
-                                this.errors[fieldError.fieldName] = fieldError.errors;
-                            }
-                        } else {
-                            this.snackbar.isSuccess = false;
-                            this.snackbar.isShowing = true;
-                            this.snackbar.message = 'Internal Server Error. Try later';
-                        }
-                    });
+                const login = this.form.login;
+                const password = this.form.password;
+                this.userLogin({login, password})
             }
         }
     }
