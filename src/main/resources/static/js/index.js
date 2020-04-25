@@ -4,8 +4,6 @@ import vuetify from 'plugins/vuetify'
 import store from 'store/store'
 import 'vuetify/dist/vuetify.min.css'
 
-import UserService from "service/userService";
-
 new Vue({
     el: '#app',
     vuetify,
