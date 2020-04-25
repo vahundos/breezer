@@ -4,36 +4,36 @@
                 label="First name"
                 outlined
                 v-model="form.firstName"
-                :rules="[rules.required]"
                 :error-messages="errors.firstName"
-                v-on:keydown="errors.firstName = []"/>
+                @input="fieldErrors('firstName')"
+                @blur="fieldErrors('firstName')"/>
 
 
         <v-text-field
                 label="Second name"
                 outlined
                 v-model="form.secondName"
-                :rules="[rules.required]"
                 :error-messages="errors.secondName"
-                v-on:keydown="errors.secondName = []"/>
+                @input="fieldErrors('secondName')"
+                @blur="fieldErrors('secondName')"/>
 
 
         <v-text-field
                 label="Nickname"
                 outlined
                 v-model="form.nickname"
-                :rules="[rules.required]"
                 :error-messages="errors.nickname"
-                v-on:keydown="errors.nickname = []"/>
+                @input="fieldErrors('nickname')"
+                @blur="fieldErrors('nickname')"/>
 
 
         <v-text-field
                 label="Email"
                 outlined
                 v-model="form.email"
-                :rules="[rules.required, rules.email]"
                 :error-messages="errors.email"
-                v-on:keydown="errors.email = []"/>
+                @input="fieldErrors('email')"
+                @blur="fieldErrors('email')"/>
 
         <v-row>
             <v-col>
@@ -42,9 +42,9 @@
                         type="password"
                         outlined
                         v-model="form.password"
-                        :rules="[rules.required]"
                         :error-messages="errors.password"
-                        v-on:keydown="errors.password = []"/>
+                        @input="fieldErrors('password')"
+                        @blur="fieldErrors('password')"/>
             </v-col>
             <v-col>
                 <v-text-field
@@ -52,9 +52,9 @@
                         type="password"
                         outlined
                         v-model="form.passwordConfirmation"
-                        :rules="[rules.required, computed.passwordMatch]"
                         :error-messages="errors.passwordConfirmation"
-                        v-on:keydown="errors.passwordConfirmation = []"/>
+                        @input="fieldErrors('passwordConfirmation')"
+                        @blur="fieldErrors('passwordConfirmation')"/>
             </v-col>
         </v-row>
 
@@ -78,6 +78,8 @@
 
 <script>
     import axios from 'axios'
+    import {email, maxLength, minLength, required, sameAs} from "vuelidate/lib/validators";
+    import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
 
     export default {
         name: "UserRegistrationForm",
@@ -99,16 +101,6 @@
                     password: [],
                     passwordConfirmation: []
                 },
-                rules: {
-                    required: value => !!value || 'Required.',
-                    email: value => {
-                        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                        return pattern.test(value) || 'Invalid e-mail.'
-                    }
-                },
-                computed: {
-                    passwordMatch: () => this.form.password === this.form.passwordConfirmation || 'Passwords are different'
-                },
                 snackbar: {
                     isSuccess: false,
                     isShowing: false,
@@ -116,9 +108,47 @@
                 }
             }
         },
+        validations: {
+            form: {
+                firstName: {
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(20)
+                },
+                secondName: {
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(20)
+                },
+                nickname: {
+                    required,
+                    minLength: minLength(2),
+                    maxLength: maxLength(20)
+                },
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required,
+                    minLength: minLength(6),
+                    maxLength: maxLength(50)
+                },
+                passwordConfirmation: {
+                    required,
+                    sameAsPassword: sameAs('password')
+                }
+            }
+        },
         methods: {
+            fieldErrors(paramName) {
+                this.$v.form[paramName].$touch();
+                this.errors[paramName] = getErrorMessagesForParam(this.$v.form, paramName);
+            },
             onSubmit() {
-                if (!this.$refs.form.validate()) {
+                this.$v.form.$touch();
+                if (this.$v.form.$invalid) {
+                    console.log('Form is not-well formed');
                     return;
                 }
 
@@ -127,24 +157,24 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => {
-                    this.snackbar.isSuccess = true;
-                    this.snackbar.message = "Registered successfully";
-                    this.snackbar.isShowing = true;
-                    console.log(response);
-                })
-                .catch(errorResponse => {
-                    console.error(errorResponse);
-                    if (errorResponse.response.status === 400) {
-                        for (const fieldError of errorResponse.response.data) {
-                            this.errors[fieldError.fieldName] = fieldError.errors;
-                        }
-                    } else {
-                        this.snackbar.isSuccess = false;
+                    .then(response => {
+                        this.snackbar.isSuccess = true;
+                        this.snackbar.message = "Registered successfully";
                         this.snackbar.isShowing = true;
-                        this.snackbar.message = 'Internal Server Error. Try later';
-                    }
-                });
+                        console.log(response);
+                    })
+                    .catch(errorResponse => {
+                        console.error(errorResponse);
+                        if (errorResponse.response.status === 400) {
+                            for (const fieldError of errorResponse.response.data) {
+                                this.errors[fieldError.fieldName] = fieldError.errors;
+                            }
+                        } else {
+                            this.snackbar.isSuccess = false;
+                            this.snackbar.isShowing = true;
+                            this.snackbar.message = 'Internal Server Error. Try later';
+                        }
+                    });
             }
         }
     }

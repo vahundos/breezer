@@ -18,9 +18,7 @@
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
-    "moduleNameMapper": {
-      "@/(.*)$": "<rootDir>/src/main/resources/static/js/$1"
-    },
+    "modulePaths": ["<rootDir>/src/main/resources/static/js"],
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/main/resources/static/js/**/*.{js,vue}",
@@ -54,6 +52,7 @@
     "vue-style-loader": "4.1.2",
     "vue-template-compiler": "2.6.11",
     "vue-template-loader": "1.0.0",
+    "vuelidate": "^0.7.5",
     "webpack": "4.42.0",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3",

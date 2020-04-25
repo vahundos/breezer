@@ -3,3 +3,7 @@ spring:
     active: dev
   jpa:
     open-in-view: false
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always

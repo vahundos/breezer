@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -30,11 +31,14 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private UserServiceImpl userService;
 
     @BeforeEach
     public void setUp() {
-        this.userService = new UserServiceImpl(modelMapper, userRepository);
+        this.userService = new UserServiceImpl(modelMapper, userRepository, passwordEncoder);
     }
 
     @Test
@@ -53,7 +57,7 @@ class UserServiceImplTest {
         EntityNotFoundException exception = catchThrowableOfType(() -> userService.get(userId),
                                                                  EntityNotFoundException.class);
 
-        assertThat(exception.getMessage()).isEqualTo(String.format("Entity with id = %d not found", userId));
+        assertThat(exception.getMessage()).isEqualTo(String.format("User with id=%d not found", userId));
     }
 
     @Test
