@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <v-toolbar-title>Page title</v-toolbar-title>
+            <v-toolbar-title>Breezer</v-toolbar-title>
             <v-btn v-if="this.$store.state.userAuthToken" absolute right icon @click.prevent="userLogout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
