@@ -19,11 +19,11 @@
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
     "modulePaths": [
-      "<rootDir>/src/main/resources/static/js"
+      "<rootDir>/src/main/js"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/main/resources/static/js/**/*.{js,vue}",
+      "src/main/js/**/*.{js,vue}",
       "!**/node_modules/**"
     ],
     "coverageReporters": [
@@ -49,6 +49,7 @@
     "css-loader": "3.4.2",
     "deepmerge": "4.2.2",
     "fibers": "5.0.0",
+    "html-webpack-plugin": "4.2.0",
     "jest": "25.4.0",
     "sass": "1.26.5",
     "sass-loader": "8.0.2",
