@@ -9,6 +9,11 @@ spring:
       ddl-auto: create
     show-sql: true
 
+cors:
+  allowed-origins: 'http://localhost:8000'
+  allowed-methods: GET, POST
+  allowed-headers: Accept, Content-Type, Authorization, X-Auth-Token
+
 logging:
   level:
     com:

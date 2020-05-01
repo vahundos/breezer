@@ -2,9 +2,9 @@ package com.github.vahundos.breezer.config;
 
 import com.github.vahundos.breezer.web.filter.BasicAuthenticationDenyFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -48,12 +48,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource(@Value("${cors.allowed-origins}") List<String> origins,
+                                                           @Value("${cors.allowed-methods}") List<String> methods,
+                                                           @Value("${cors.allowed-headers}") List<String> headers) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8000"));
-        configuration.setAllowedMethods(List.of("GET", "POST"));
-        configuration.setAllowedHeaders(List.of(HttpHeaders.ACCEPT, HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION,
-                                                "X-Auth-Token"));
+        configuration.setAllowedOrigins(origins);
+        configuration.setAllowedMethods(methods);
+        configuration.setAllowedHeaders(headers);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
