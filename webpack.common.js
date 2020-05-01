@@ -1,8 +1,9 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: path.join(__dirname, 'src', 'main', 'resources', 'static', 'js', 'index.js'),
+    entry: path.join(__dirname, 'src', 'main', 'js', 'index.js'),
     module: {
         rules: [
             {
@@ -46,11 +47,15 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, 'src', 'main', 'js', 'pages', 'index.html'),
+            inject: true
+        }),
     ],
     resolve: {
         modules: [
-            path.join(__dirname, 'src', 'main', 'resources', 'static', 'js'),
+            path.join(__dirname, 'src', 'main', 'js'),
             path.join(__dirname, 'node_modules'),
         ],
     }

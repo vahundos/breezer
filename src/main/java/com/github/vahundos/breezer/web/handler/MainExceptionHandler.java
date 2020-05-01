@@ -51,7 +51,7 @@ public class MainExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception e) {
+    public ResponseEntity<Object> handleException(Exception e) {
         log.error(ERROR_MESSAGE, e);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
