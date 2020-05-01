@@ -60,7 +60,7 @@ class UserRestControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    private final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     private String authToken;
 
