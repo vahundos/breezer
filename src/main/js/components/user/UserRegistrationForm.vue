@@ -1,85 +1,88 @@
 <template>
-    <v-form ref="form">
-        <v-text-field
-                label="First name"
-                outlined
-                v-model="form.firstName"
-                :error-messages="errors.firstName"
-                @input="fieldErrors('firstName')"
-                @blur="fieldErrors('firstName')"/>
+    <v-container>
+        <v-form ref="form">
+            <v-text-field
+                    label="First name"
+                    outlined
+                    v-model="form.firstName"
+                    :error-messages="errors.firstName"
+                    @input="fieldErrors('firstName')"
+                    @blur="fieldErrors('firstName')"/>
 
 
-        <v-text-field
-                label="Second name"
-                outlined
-                v-model="form.secondName"
-                :error-messages="errors.secondName"
-                @input="fieldErrors('secondName')"
-                @blur="fieldErrors('secondName')"/>
+            <v-text-field
+                    label="Second name"
+                    outlined
+                    v-model="form.secondName"
+                    :error-messages="errors.secondName"
+                    @input="fieldErrors('secondName')"
+                    @blur="fieldErrors('secondName')"/>
 
 
-        <v-text-field
-                label="Nickname"
-                outlined
-                v-model="form.nickname"
-                :error-messages="errors.nickname"
-                @input="fieldErrors('nickname')"
-                @blur="fieldErrors('nickname')"/>
+            <v-text-field
+                    label="Nickname"
+                    outlined
+                    v-model="form.nickname"
+                    :error-messages="errors.nickname"
+                    @input="fieldErrors('nickname')"
+                    @blur="fieldErrors('nickname')"/>
 
 
-        <v-text-field
-                label="Email"
-                outlined
-                v-model="form.email"
-                :error-messages="errors.email"
-                @input="fieldErrors('email')"
-                @blur="fieldErrors('email')"/>
+            <v-text-field
+                    label="Email"
+                    outlined
+                    v-model="form.email"
+                    :error-messages="errors.email"
+                    @input="fieldErrors('email')"
+                    @blur="fieldErrors('email')"/>
 
-        <v-row>
-            <v-col>
-                <v-text-field
-                        label="Password"
-                        type="password"
-                        outlined
-                        v-model="form.password"
-                        :error-messages="errors.password"
-                        @input="fieldErrors('password')"
-                        @blur="fieldErrors('password')"/>
-            </v-col>
-            <v-col>
-                <v-text-field
-                        label="Confirm password"
-                        type="password"
-                        outlined
-                        v-model="form.passwordConfirmation"
-                        :error-messages="errors.passwordConfirmation"
-                        @input="fieldErrors('passwordConfirmation')"
-                        @blur="fieldErrors('passwordConfirmation')"/>
-            </v-col>
-        </v-row>
+            <v-row>
+                <v-col>
+                    <v-text-field
+                            label="Password"
+                            type="password"
+                            outlined
+                            v-model="form.password"
+                            :error-messages="errors.password"
+                            @input="fieldErrors('password')"
+                            @blur="fieldErrors('password')"/>
+                </v-col>
+                <v-col>
+                    <v-text-field
+                            label="Confirm password"
+                            type="password"
+                            outlined
+                            v-model="form.passwordConfirmation"
+                            :error-messages="errors.passwordConfirmation"
+                            @input="fieldErrors('passwordConfirmation')"
+                            @blur="fieldErrors('passwordConfirmation')"/>
+                </v-col>
+            </v-row>
 
-        <v-layout align-center justify-end>
-            <v-btn color="primary" @click.prevent="onSubmit">
-                Register
-            </v-btn>
-        </v-layout>
+            <v-layout align-center justify-end>
+                <v-btn color="primary" @click.prevent="onSubmit">
+                    Register
+                </v-btn>
+            </v-layout>
 
-        <v-snackbar :timeout="0" v-model="this.snackbar.isShowing">
-            <v-icon color="success" v-if="this.snackbar.isSuccess">done</v-icon>
-            <v-icon color="error" v-else>warning</v-icon>
+            <v-snackbar :timeout="0" v-model="this.snackbar.isShowing">
+                <v-icon color="success" v-if="this.snackbar.isSuccess">done</v-icon>
+                <v-icon color="error" v-else>warning</v-icon>
 
-            <span>{{this.snackbar.message}}</span>
-            <v-btn @click="snackbar.isShowing = false">
-                Close
-            </v-btn>
-        </v-snackbar>
-    </v-form>
+                <span>{{this.snackbar.message}}</span>
+                <v-btn @click="snackbar.isShowing = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
+        </v-form>
+    </v-container>
 </template>
 
 <script>
     import axios from 'axios'
     import {email, maxLength, minLength, required, sameAs} from "vuelidate/lib/validators";
     import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
+    import userService from "service/userService";
 
     export default {
         name: "UserRegistrationForm",
@@ -152,16 +155,14 @@
                     return;
                 }
 
-                axios.post('/users/register', JSON.stringify(this.form), {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                userService.register(this.form)
                     .then(response => {
                         this.snackbar.isSuccess = true;
                         this.snackbar.message = "Registered successfully";
                         this.snackbar.isShowing = true;
                         console.log(response);
+
+                        this.$router.push('/login');
                     })
                     .catch(errorResponse => {
                         console.error(errorResponse);
