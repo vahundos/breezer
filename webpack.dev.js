@@ -11,8 +11,6 @@ module.exports = merge(common, {
         allowedHosts: [
             'localhost:8080'
         ],
-        historyApiFallback: {
-            disableDotRule: true
-        }
+        historyApiFallback: true
     }
 });
