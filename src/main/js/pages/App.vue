@@ -11,6 +11,8 @@
                 <user-login-form v-if="!this.$store.state.userAuthToken"/>
             </v-container>
         </v-content>
+
+        <router-view></router-view>
     </v-app>
 </template>
 
