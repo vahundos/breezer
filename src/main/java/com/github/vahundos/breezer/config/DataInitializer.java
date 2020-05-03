@@ -36,9 +36,6 @@ public class DataInitializer {
             byte[] bytes = Files.readAllBytes(path);
 
             userPictureRepository.save(new UserPicture(null, userRepository.getOne(1L), bytes));
-            userPictureRepository.save(new UserPicture(null, userRepository.getOne(2L), new byte[]{}));
-            userPictureRepository.save(new UserPicture(null, userRepository.getOne(3L), new byte[]{}));
-            userPictureRepository.save(new UserPicture(null, userRepository.getOne(4L), new byte[]{}));
         });
     }
 }

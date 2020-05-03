@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -73,5 +75,10 @@ public class UserRestController {
         ByteArrayResource picture = new ByteArrayResource(userPicture.getPicture());
 
         return ResponseEntity.ok(picture);
+    }
+
+    @PostMapping("/{userId}/picture")
+    public void saveUserPicture(@RequestParam("picture") MultipartFile picture, @PathVariable long userId) throws IOException {
+        userPictureService.save(picture.getBytes(), userId);
     }
 }

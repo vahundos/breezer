@@ -7,3 +7,6 @@ spring:
     store-type: jdbc
     jdbc:
       initialize-schema: always
+  servlet:
+    multipart:
+      max-file-size: 3MB
