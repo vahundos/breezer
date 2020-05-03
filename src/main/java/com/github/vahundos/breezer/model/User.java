@@ -46,4 +46,8 @@ public class User {
     @JsonView(UserViews.WithoutSensitiveData.class)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<UserRole> roles = new HashSet<>();
+
+    @JoinColumn(name = "picture_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserPicture picture;
 }

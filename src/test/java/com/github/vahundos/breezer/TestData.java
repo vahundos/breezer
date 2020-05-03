@@ -2,6 +2,7 @@ package com.github.vahundos.breezer;
 
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
+import com.github.vahundos.breezer.model.UserPicture;
 import com.github.vahundos.breezer.model.UserRole;
 import com.github.vahundos.breezer.model.UserStatus;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ public class TestData {
 
     public static User getUser1() {
         return new User(1L, "Ivan", "Ivanov", USERNAME, "ivan.ivanov@mail.net", UserStatus.ACTIVATED, PASSWORD,
-                        Set.of(UserRole.USER, UserRole.ADMIN));
+                        Set.of(UserRole.USER, UserRole.ADMIN), new UserPicture());
     }
 
     public static UserRegistrationDto getUserForRegistration() {
