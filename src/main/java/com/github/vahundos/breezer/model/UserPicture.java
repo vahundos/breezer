@@ -23,5 +23,6 @@ public class UserPicture {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Lob
     private byte[] picture;
 }

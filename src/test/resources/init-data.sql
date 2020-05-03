@@ -17,4 +17,4 @@ VALUES (1, 'USER'),
        (2, 'USER');
 
 INSERT INTO user_pictures ("USER_ID", "PICTURE")
-VALUES (1, ''), (2, ''), (3, ''), (4, '');
+VALUES (1, '');
