@@ -10,6 +10,7 @@ module.exports = merge(common, {
         port: 8000,
         allowedHosts: [
             'localhost:8080'
-        ]
+        ],
+        historyApiFallback: true
     }
 });

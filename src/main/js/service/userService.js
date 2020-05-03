@@ -20,6 +20,14 @@ export default class UserService {
         return authToken;
     }
 
+    static async register(form) {
+        await axios.post(REMOTE_SERVICE_BASE_URL + '/register', JSON.stringify(form), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+
     static async logout() {
         await axios.post(REMOTE_SERVICE_BASE_URL + '/logout', '');
         localStorage.removeItem(USER_TOKEN);

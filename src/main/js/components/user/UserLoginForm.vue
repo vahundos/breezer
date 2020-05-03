@@ -1,45 +1,47 @@
 <template>
-    <v-form ref="form">
+    <v-container>
+        <v-form ref="form">
 
-        <v-text-field
-                label="Login"
-                v-model="form.login"
-                outlined
-                :error-messages="errors.login"
-                @input="fieldErrors('login')"
-                @blur="fieldErrors('login')"/>
+            <v-text-field
+                    label="Login"
+                    v-model="form.login"
+                    outlined
+                    :error-messages="errors.login"
+                    @input="fieldErrors('login')"
+                    @blur="fieldErrors('login')"/>
 
-        <v-text-field
-                label="Password"
-                type="password"
-                v-model="form.password"
-                outlined
-                :error-messages="errors.password"
-                @input="fieldErrors('password')"
-                @blur="fieldErrors('password')"/>
+            <v-text-field
+                    label="Password"
+                    type="password"
+                    v-model="form.password"
+                    outlined
+                    :error-messages="errors.password"
+                    @input="fieldErrors('password')"
+                    @blur="fieldErrors('password')"/>
 
-        <v-layout align-center justify-end>
-            <v-btn color="primary" @click.prevent="onSubmit">
-                Login
-            </v-btn>
-        </v-layout>
+            <v-layout align-center justify-end>
+                <v-btn color="primary" @click.prevent="onSubmit">
+                    Login
+                </v-btn>
+            </v-layout>
 
-        <v-snackbar :timeout="0" v-model="this.snackbar.isShowing">
-            <v-icon color="success" v-if="this.snackbar.isSuccess">done</v-icon>
-            <v-icon color="error" v-else>warning</v-icon>
+            <v-snackbar :timeout="0" v-model="this.snackbar.isShowing">
+                <v-icon color="success" v-if="this.snackbar.isSuccess">done</v-icon>
+                <v-icon color="error" v-else>warning</v-icon>
 
-            <span>{{this.snackbar.message}}</span>
-            <v-btn @click="snackbar.isShowing = false">
-                Close
-            </v-btn>
-        </v-snackbar>
-    </v-form>
+                <span>{{this.snackbar.message}}</span>
+                <v-btn @click="snackbar.isShowing = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
+        </v-form>
+    </v-container>
 </template>
 
 <script>
     import {maxLength, minLength, required} from 'vuelidate/lib/validators'
     import {getErrorMessagesForParam} from 'utils/errorMessageUtils'
-    import { mapActions } from 'vuex'
+    import {mapActions} from 'vuex'
 
     export default {
         name: "UserLoginForm",
@@ -87,9 +89,10 @@
                     return;
                 }
 
-                const login = this.form.login;
-                const password = this.form.password;
+                const login = this.form.login
+                const password = this.form.password
                 this.userLogin({login, password})
+                    .then(() => this.$router.push('/'))
             }
         }
     }

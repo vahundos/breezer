@@ -1,29 +1,44 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <v-toolbar-title>Breezer</v-toolbar-title>
-            <v-btn v-if="this.$store.state.userAuthToken" absolute right icon @click.prevent="userLogout">
+            <v-toolbar-title @click="showMain">Breezer</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn v-if="this.$store.state.userAuthToken" icon @click="logout">
                 <v-icon>exit_to_app</v-icon>
+            </v-btn>
+            <v-btn v-if="!this.$store.state.userAuthToken" text @click="showLogin">
+                Login
+            </v-btn>
+            <v-btn v-if="!this.$store.state.userAuthToken" text @click="showRegistration">
+                Registration
             </v-btn>
         </v-app-bar>
         <v-content>
-            <v-container>
-                <user-login-form v-if="!this.$store.state.userAuthToken"/>
-            </v-container>
+            <router-view></router-view>
         </v-content>
     </v-app>
 </template>
 
 <script>
-    import UserLoginForm from "components/user/UserLoginForm.vue";
-    import UserRegistrationForm from "components/user/UserRegistrationForm.vue";
     import { mapActions } from 'vuex'
 
     export default {
         name: "App",
-        components: {UserLoginForm, UserRegistrationForm},
         methods: {
-            ...mapActions(['userLogout'])
+            ...mapActions(['userLogout']),
+            logout() {
+                this.$router.push('/');
+                this.userLogout();
+            },
+            showMain() {
+                this.$router.push('/')
+            },
+            showLogin() {
+                this.$router.push('/login')
+            },
+            showRegistration() {
+                this.$router.push('/registration');
+            }
         }
     }
 </script>
