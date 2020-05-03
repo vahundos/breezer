@@ -66,10 +66,10 @@ class UserRestControllerIT {
                                           .andExpect(status().isOk())
                                           .andReturn();
 
-        Map<String, String> responseMap = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+        Map<String, Object> responseMap = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
                                                                  new TypeReference<>() {
                                                                  });
-        this.authToken = responseMap.get(AUTH_TOKEN);
+        this.authToken = (String) responseMap.get(AUTH_TOKEN);
     }
 
     @Test
