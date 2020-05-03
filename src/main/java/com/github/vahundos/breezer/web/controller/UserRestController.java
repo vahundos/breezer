@@ -3,11 +3,16 @@ package com.github.vahundos.breezer.web.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
+import com.github.vahundos.breezer.model.UserPicture;
 import com.github.vahundos.breezer.model.UserStatus;
+import com.github.vahundos.breezer.service.UserPictureService;
 import com.github.vahundos.breezer.service.UserService;
 import com.github.vahundos.breezer.view.UserViews;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +29,14 @@ public class UserRestController {
 
     public static final String AUTH_TOKEN = "authToken";
 
-    private final UserService service;
+    private final UserService userService;
+
+    private final UserPictureService userPictureService;
 
     @GetMapping("/{id}")
     @JsonView(UserViews.WithoutSensitiveData.class)
     public User get(@PathVariable long id) {
-        return service.get(id);
+        return userService.get(id);
     }
 
     @PostMapping("/login")
@@ -45,18 +52,26 @@ public class UserRestController {
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     @JsonView(UserViews.WithoutSensitiveData.class)
     public ResponseEntity<User> register(@RequestBody @Valid UserRegistrationDto user) {
-        return new ResponseEntity<>(service.register(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/activate")
     @JsonView(UserViews.WithoutSensitiveData.class)
     public User activate(@PathVariable long id) {
-        return service.updateStatus(id, UserStatus.ACTIVATED);
+        return userService.updateStatus(id, UserStatus.ACTIVATED);
     }
 
     @PutMapping("/{id}/ban")
     @JsonView(UserViews.WithoutSensitiveData.class)
     public User ban(@PathVariable long id) {
-        return service.updateStatus(id, UserStatus.BANNED);
+        return userService.updateStatus(id, UserStatus.BANNED);
+    }
+
+    @GetMapping(path = "/{userId}/picture", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getPictureByUserId(@PathVariable long userId) {
+        UserPicture userPicture = userPictureService.getByUserId(userId);
+        ByteArrayResource picture = new ByteArrayResource(userPicture.getPicture());
+
+        return ResponseEntity.ok(picture);
     }
 }

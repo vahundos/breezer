@@ -84,7 +84,6 @@ class UserRestControllerIT {
         String responseBody = mvcResult.getResponse().getContentAsString();
         User expectedUser = TestData.getUser1();
         expectedUser.setPassword(null);
-        expectedUser.setPicture(null);
         JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
     }
 
@@ -211,7 +210,6 @@ class UserRestControllerIT {
         String responseBody = mvcResult.getResponse().getContentAsString();
         User expectedUser = TestData.getUser1();
         expectedUser.setPassword(null);
-        expectedUser.setPicture(null);
         expectedUser.setStatus(UserStatus.ACTIVATED);
         JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
     }
@@ -245,7 +243,6 @@ class UserRestControllerIT {
         String responseBody = mvcResult.getResponse().getContentAsString();
         User expectedUser = TestData.getUser1();
         expectedUser.setPassword(null);
-        expectedUser.setPicture(null);
         expectedUser.setStatus(UserStatus.BANNED);
         JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
     }

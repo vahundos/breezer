@@ -24,7 +24,7 @@ public class TestData {
 
     public static User getUser1() {
         return new User(1L, "Ivan", "Ivanov", USERNAME, "ivan.ivanov@mail.net", UserStatus.ACTIVATED, PASSWORD,
-                        Set.of(UserRole.USER, UserRole.ADMIN), new UserPicture());
+                        Set.of(UserRole.USER, UserRole.ADMIN));
     }
 
     public static UserRegistrationDto getUserForRegistration() {
