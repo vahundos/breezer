@@ -3,13 +3,13 @@
         <v-app-bar app>
             <v-toolbar-title @click="showMain">Breezer</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn v-if="this.$store.state.userAuthToken" icon @click="logout">
+            <v-btn v-if="this.$store.state.authToken" icon @click="logout">
                 <v-icon>exit_to_app</v-icon>
             </v-btn>
-            <v-btn v-if="!this.$store.state.userAuthToken" text @click="showLogin">
+            <v-btn v-if="!this.$store.state.authToken" text @click="showLogin">
                 Login
             </v-btn>
-            <v-btn v-if="!this.$store.state.userAuthToken" text @click="showRegistration">
+            <v-btn v-if="!this.$store.state.authToken" text @click="showRegistration">
                 Registration
             </v-btn>
         </v-app-bar>

@@ -17,7 +17,16 @@ export default class UserService {
         const authToken = response.data.authToken;
         localStorage.setItem(USER_TOKEN, authToken);
         axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = authToken;
-        return authToken;
+        return response.data;
+    }
+
+    static async retrieveIdByAuthorization() {
+        if (this.loadAuthTokenFromStorage() === null) {
+            return null;
+        }
+
+        let response = await axios.get(REMOTE_SERVICE_BASE_URL + '/authorizedId')
+        return response.data.id;
     }
 
     static async register(form) {

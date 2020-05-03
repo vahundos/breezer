@@ -1,29 +1,38 @@
 import Vuex from 'vuex'
-import Vue from "vue";
-import UserService from "service/userService";
+import Vue from 'vue'
+import UserService from 'service/userService'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        userAuthToken: ''
+        authToken: null,
+        id: null
     },
     mutations: {
-        setUserAuthToken (state, userAuthToken) {
-            state.userAuthToken = userAuthToken;
+        setAuthToken(state, userAuthToken) {
+            state.authToken = userAuthToken
+        },
+        setId(state, id) {
+            state.id = id
         }
     },
     actions: {
         async userLogin({commit}, payload) {
-            console.log(payload);
-            commit('setUserAuthToken', await UserService.login(payload.login, payload.password));
+            console.log(payload)
+            const data = await UserService.login(payload.login, payload.password)
+
+            commit('setAuthToken', data.authToken)
+            commit('setId', data.user.id)
         },
         async userLogout({commit}) {
-            await UserService.logout();
-            commit('setUserAuthToken', '');
+            await UserService.logout()
+            commit('setAuthToken', null)
+            commit('setId', null)
         },
-        async loadAuthTokenFromStorage({commit}) {
-            commit('setUserAuthToken', UserService.loadAuthTokenFromStorage())
+        async refreshStorage({commit}) {
+            commit('setAuthToken', UserService.loadAuthTokenFromStorage())
+            commit('setId', await UserService.retrieveIdByAuthorization())
         }
     }
 })

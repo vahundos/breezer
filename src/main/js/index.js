@@ -15,6 +15,6 @@ new Vue({
     router,
     render: a => a(App),
     created: function () {
-        this.$store.dispatch('loadAuthTokenFromStorage');
+        this.$store.dispatch('refreshStorage');
     }
 });
