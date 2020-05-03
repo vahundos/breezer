@@ -29,11 +29,12 @@ describe('UserService', () => {
             .defaultReplyHeaders(DEFAULT_REPLAY_HEADERS)
             .post('/users/login')
             .reply(200, {
+                'user': {},
                 'authToken': AUTH_TOKEN
             })
 
-        const returnedUserToken = await userService.login(username, password)
-        expect(returnedUserToken).toBe(AUTH_TOKEN)
+        const returnedUserData = await userService.login(username, password)
+        expect(returnedUserData.authToken).toBe(AUTH_TOKEN)
         expect(axios.defaults.headers.common[X_AUTH_TOKEN_HEADER]).toBe(AUTH_TOKEN)
         expect(localStorage.getItem(USER_TOKEN)).toBe(AUTH_TOKEN)
     })
