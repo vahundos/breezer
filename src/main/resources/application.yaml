@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   jpa:
     open-in-view: false
   session:
@@ -10,3 +8,8 @@ spring:
   servlet:
     multipart:
       max-file-size: 3MB
+
+cors:
+  allowed-origins: 'http://localhost:8000'
+  allowed-methods: GET, POST
+  allowed-headers: Accept, Content-Type, Authorization, X-Auth-Token
