@@ -1,6 +1,7 @@
 package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.github.vahundos.breezer.AuthorizedUser;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserPicture;
@@ -14,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,8 +44,10 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(HttpSession httpSession) {
-        return Map.of(AUTH_TOKEN, httpSession.getId());
+    @JsonView(UserViews.WithoutSensitiveData.class)
+    public Map<String, Object> login(HttpSession httpSession, @AuthenticationPrincipal AuthorizedUser authorizedUser) {
+        User user = userService.get(authorizedUser.getUserId());
+        return Map.of(AUTH_TOKEN, httpSession.getId(), "user", user);
     }
 
     @PostMapping("/logout")
