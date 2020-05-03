@@ -17,12 +17,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.lang.String.format;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final ModelMapper modelMapper;
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public User register(UserRegistrationDto userDto) {
         log.debug("Register new user={}", userDto);
         if (repository.findByEmail(userDto.getEmail()).isPresent()) {
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public User updateStatus(long userId, UserStatus newStatus) {
         log.debug("Updating status={} for userId={}", newStatus, userId);
         if (newStatus == UserStatus.REGISTERED) {

@@ -7,6 +7,7 @@ import com.github.vahundos.breezer.repository.UserPictureRepository;
 import com.github.vahundos.breezer.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import static java.lang.String.format;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class UserPictureServiceImpl implements UserPictureService {
 
     private final UserRepository userRepository;
@@ -28,6 +30,7 @@ public class UserPictureServiceImpl implements UserPictureService {
     }
 
     @Override
+    @Transactional
     public void save(byte[] picture, long userId) {
         User userReference = userRepository.getOne(userId);
 
