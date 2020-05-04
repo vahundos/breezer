@@ -33,6 +33,9 @@
             showMain() {
                 this.$router.push('/')
             },
+            showProfile() {
+                this.$router.push('/profile')
+            },
             showLogin() {
                 this.$router.push('/login')
             },

@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const USER_TOKEN = 'user-token';
-const X_AUTH_TOKEN_HEADER = 'X-Auth-Token';
+const USER_TOKEN = 'user-token'
+const X_AUTH_TOKEN_HEADER = 'X-Auth-Token'
 
-const REMOTE_SERVICE_BASE_URL = 'http://localhost:8080/users';
+const REMOTE_SERVICE_BASE_URL = 'http://localhost:8080/users'
 
 export default class UserService {
 
@@ -12,21 +12,26 @@ export default class UserService {
             headers: {
                 'Authorization': 'Basic ' + btoa(`${username}:${password}`)
             }
-        });
+        })
 
-        const authToken = response.data.authToken;
-        localStorage.setItem(USER_TOKEN, authToken);
-        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = authToken;
-        return response.data;
+        const authToken = response.data.authToken
+        localStorage.setItem(USER_TOKEN, authToken)
+        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = authToken
+        return response.data
     }
 
     static async retrieveIdByAuthorization() {
         if (this.loadAuthTokenFromStorage() === null) {
-            return null;
+            return null
         }
 
         let response = await axios.get(REMOTE_SERVICE_BASE_URL + '/authorizedId')
-        return response.data.id;
+        return response.data.id
+    }
+
+    static async getUserPicture(userId) {
+        const response = await axios.get(REMOTE_SERVICE_BASE_URL + `/${userId}/picture`)
+        return response.data
     }
 
     static async register(form) {
@@ -38,15 +43,15 @@ export default class UserService {
     }
 
     static async logout() {
-        await axios.post(REMOTE_SERVICE_BASE_URL + '/logout', '');
-        localStorage.removeItem(USER_TOKEN);
-        delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER];
+        await axios.post(REMOTE_SERVICE_BASE_URL + '/logout', '')
+        localStorage.removeItem(USER_TOKEN)
+        delete axios.defaults.headers.common[X_AUTH_TOKEN_HEADER]
     }
 
     static loadAuthTokenFromStorage() {
-        let userToken = localStorage.getItem(USER_TOKEN);
-        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = userToken;
+        let userToken = localStorage.getItem(USER_TOKEN)
+        axios.defaults.headers.common[X_AUTH_TOKEN_HEADER] = userToken
 
-        return userToken;
+        return userToken
     }
 }
