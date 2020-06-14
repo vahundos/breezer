@@ -2,6 +2,7 @@
     <v-app>
         <v-app-bar app>
             <v-toolbar-title @click="showMain">Breezer</v-toolbar-title>
+            <v-btn v-if="this.$store.state.authToken" text @click="showProfile">{{this.$store.state.user.nickname}}</v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="this.$store.state.authToken" icon @click="logout">
                 <v-icon>exit_to_app</v-icon>

@@ -7,14 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         authToken: null,
-        id: null
+        user: null
     },
     mutations: {
         setAuthToken(state, userAuthToken) {
             state.authToken = userAuthToken
         },
-        setId(state, id) {
-            state.id = id
+        setUser(state, user) {
+            state.user = user
         }
     },
     actions: {
@@ -23,16 +23,16 @@ export default new Vuex.Store({
             const data = await UserService.login(payload.login, payload.password)
 
             commit('setAuthToken', data.authToken)
-            commit('setId', data.user.id)
+            commit('setUser', data.user)
         },
         async userLogout({commit}) {
             await UserService.logout()
             commit('setAuthToken', null)
-            commit('setId', null)
+            commit('setUser', null)
         },
         async refreshStorage({commit}) {
             commit('setAuthToken', UserService.loadAuthTokenFromStorage())
-            commit('setId', await UserService.retrieveIdByAuthorization())
+            commit('setUser', await UserService.getByAuthorization())
         }
     }
 })

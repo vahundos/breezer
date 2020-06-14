@@ -17,7 +17,7 @@
         },
         methods: {
             async retrieveUserPicture() {
-                const userPicture = await userService.getUserPicture(this.$store.state.id)
+                const userPicture = await userService.getUserPicture(this.$store.state.user.id)
                 const reader = new FileReader()
                 reader.onload = () => {
                     console.log(reader.result)

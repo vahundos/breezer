@@ -20,13 +20,13 @@ export default class UserService {
         return response.data
     }
 
-    static async retrieveIdByAuthorization() {
+    static async getByAuthorization() {
         if (this.loadAuthTokenFromStorage() === null) {
             return null
         }
 
-        let response = await axios.get(REMOTE_SERVICE_BASE_URL + '/authorizedId')
-        return response.data.id
+        let response = await axios.post(REMOTE_SERVICE_BASE_URL + '/login')
+        return response.data.user
     }
 
     static async getUserPicture(userId) {

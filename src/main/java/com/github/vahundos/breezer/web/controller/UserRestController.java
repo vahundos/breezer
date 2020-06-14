@@ -50,11 +50,6 @@ public class UserRestController {
         return Map.of(AUTH_TOKEN, httpSession.getId(), "user", user);
     }
 
-    @GetMapping("/authorizedId")
-    public Map<String, Long> authorizedUserId(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
-        return Map.of("id", authorizedUser.getUserId());
-    }
-
     @PostMapping("/logout")
     public void logout(HttpSession httpSession) {
         httpSession.invalidate();
