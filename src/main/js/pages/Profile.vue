@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-img :src="imageBase64" width="100" height="100"/>
+        <v-img :src="image" width="200" height="200"/>
         <v-btn @click="retrieveUserPicture"/>
     </v-container>
 </template>
@@ -18,15 +18,12 @@
         methods: {
             async retrieveUserPicture() {
                 const userPicture = await userService.getUserPicture(this.$store.state.id)
-                const buffer = Buffer.from(userPicture)
-
-                const binary = buffer.reduce((data, b) => data += String.fromCharCode(b), '');
-                this.image = "data:image/png;base64," + btoa(binary);
-            }
-        },
-        computed: {
-            imageBase64() {
-                return this.image;
+                const reader = new FileReader()
+                reader.onload = () => {
+                    console.log(reader.result)
+                    this.image = reader.result
+                }
+                reader.readAsDataURL(userPicture)
             }
         }
     }

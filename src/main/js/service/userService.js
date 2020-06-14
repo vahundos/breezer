@@ -30,7 +30,7 @@ export default class UserService {
     }
 
     static async getUserPicture(userId) {
-        const response = await axios.get(REMOTE_SERVICE_BASE_URL + `/${userId}/picture`)
+        const response = await axios.get(REMOTE_SERVICE_BASE_URL + `/${userId}/picture`, {responseType: 'blob'})
         return response.data
     }
 
