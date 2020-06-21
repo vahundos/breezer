@@ -82,7 +82,11 @@ public class UserRestController {
     }
 
     @PostMapping("/{userId}/picture")
-    public void saveUserPicture(@RequestParam("picture") MultipartFile picture, @PathVariable long userId) throws IOException {
+    public ResponseEntity<Map<String, String>> saveUserPicture(@RequestParam("picture") MultipartFile picture, @PathVariable long userId) throws IOException {
+        if (!"image/png".equals(picture.getContentType())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "only image png is acceptable"));
+        }
         userPictureService.save(picture.getBytes(), userId);
+        return ResponseEntity.ok().build();
     }
 }
