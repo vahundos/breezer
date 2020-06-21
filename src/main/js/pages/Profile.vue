@@ -13,8 +13,9 @@
                 </v-col>
                 <v-col class="text-center">Photo to help recognize you</v-col>
                 <v-col class="text-center">
+                    <input ref="uploader" class="d-none" type="file" accept="image/png" @change="onFileChange">
                     <v-avatar size="64">
-                        <v-img :src="image"/>
+                        <v-img :src="image" @click="onImageClick"/>
                     </v-avatar>
                 </v-col>
             </v-row>
@@ -88,6 +89,15 @@
                     this.image = reader.result
                 }
                 reader.readAsDataURL(userPicture)
+            },
+            onImageClick() {
+                this.$refs.uploader.click()
+            },
+            onFileChange(e) {
+                const formData = new FormData()
+                formData.append("picture", e.target.files[0], e.target.files[0].name)
+
+                userService.saveUserPicture(this.$store.state.user.id, formData)
             }
         }
     }

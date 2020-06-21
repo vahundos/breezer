@@ -34,6 +34,10 @@ export default class UserService {
         return response.data
     }
 
+    static async saveUserPicture(userId, form) {
+        axios.post(REMOTE_SERVICE_BASE_URL + `/${userId}/picture`, form)
+    }
+
     static async register(form) {
         await axios.post(REMOTE_SERVICE_BASE_URL + '/register', JSON.stringify(form), {
             headers: {
