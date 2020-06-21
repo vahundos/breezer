@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="container">
         <v-card>
             <v-card-title>Your profile</v-card-title>
             <v-card-text>Some information can be visible for other users</v-card-text>
@@ -27,7 +27,9 @@
                         Name
                     </v-card-text>
                 </v-col>
-                <v-col class="text-center">{{this.$store.state.user.firstName + ' ' + this.$store.state.user.secondName}}</v-col>
+                <v-col class="text-center">{{this.$store.state.user.firstName + ' ' +
+                    this.$store.state.user.secondName}}
+                </v-col>
                 <v-col class="text-center">
                     <v-btn v-if="this.$store.state.authToken" icon>
                         <v-icon>keyboard_arrow_right</v-icon>
@@ -98,11 +100,17 @@
                 formData.append("picture", e.target.files[0], e.target.files[0].name)
 
                 userService.saveUserPicture(this.$store.state.user.id, formData)
+                    .then(value => {
+                        window.location.reload()
+                    })
             }
         }
     }
 </script>
 
 <style scoped>
-
+    .container {
+        min-width: 300px;
+        max-width: 1200px;
+    }
 </style>
