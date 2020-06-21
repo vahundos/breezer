@@ -19,7 +19,6 @@ export default new Vuex.Store({
     },
     actions: {
         async userLogin({commit}, payload) {
-            console.log(payload)
             const data = await UserService.login(payload.login, payload.password)
 
             commit('setAuthToken', data.authToken)
