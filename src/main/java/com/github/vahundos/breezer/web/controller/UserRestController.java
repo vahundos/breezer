@@ -45,9 +45,13 @@ public class UserRestController {
 
     @PostMapping("/login")
     @JsonView(UserViews.WithoutSensitiveData.class)
-    public Map<String, Object> login(HttpSession httpSession, @AuthenticationPrincipal AuthorizedUser authorizedUser) {
+    public ResponseEntity<Map<String, Object>> login(HttpSession httpSession, @AuthenticationPrincipal AuthorizedUser authorizedUser) {
+        if (authorizedUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         User user = userService.get(authorizedUser.getUserId());
-        return Map.of(AUTH_TOKEN, httpSession.getId(), "user", user);
+        return ResponseEntity.ok(Map.of(AUTH_TOKEN, httpSession.getId(), "user", user));
     }
 
     @PostMapping("/logout")
