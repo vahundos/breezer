@@ -2,7 +2,9 @@ package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.vahundos.breezer.AuthorizedUser;
+import com.github.vahundos.breezer.dto.Message;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
+import com.github.vahundos.breezer.dto.UserWithAuthTokenDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserPicture;
 import com.github.vahundos.breezer.model.UserStatus;
@@ -22,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -30,8 +31,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @RequestMapping(value = "/users", produces = APPLICATION_JSON_VALUE)
 public class UserRestController {
-
-    public static final String AUTH_TOKEN = "authToken";
 
     private final UserService userService;
 
@@ -45,13 +44,13 @@ public class UserRestController {
 
     @PostMapping("/login")
     @JsonView(UserViews.WithoutSensitiveData.class)
-    public ResponseEntity<Map<String, Object>> login(HttpSession httpSession, @AuthenticationPrincipal AuthorizedUser authorizedUser) {
+    public ResponseEntity<UserWithAuthTokenDto> login(HttpSession httpSession, @AuthenticationPrincipal AuthorizedUser authorizedUser) {
         if (authorizedUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         User user = userService.get(authorizedUser.getUserId());
-        return ResponseEntity.ok(Map.of(AUTH_TOKEN, httpSession.getId(), "user", user));
+        return ResponseEntity.ok(new UserWithAuthTokenDto(httpSession.getId(), user));
     }
 
     @PostMapping("/logout")
@@ -86,10 +85,11 @@ public class UserRestController {
     }
 
     @PostMapping("/{userId}/picture")
-    public ResponseEntity<Map<String, String>> saveUserPicture(@RequestParam("picture") MultipartFile picture, @PathVariable long userId) throws IOException {
+    public ResponseEntity<Message> saveUserPicture(@RequestParam("picture") MultipartFile picture, @PathVariable long userId) throws IOException {
         if (!"image/png".equals(picture.getContentType())) {
-            return ResponseEntity.badRequest().body(Map.of("message", "only image png is acceptable"));
+            return ResponseEntity.badRequest().body(new Message("only image png is acceptable"));
         }
+
         userPictureService.save(picture.getBytes(), userId);
         return ResponseEntity.ok().build();
     }

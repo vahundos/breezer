@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.vahundos.breezer.TestData.*;
-import static com.github.vahundos.breezer.web.controller.UserRestController.AUTH_TOKEN;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -42,6 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 @Sql(scripts = "/init-data.sql")
 class UserRestControllerIT {
+
+    private static final String AUTH_TOKEN = "authToken";
 
     private static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
 
