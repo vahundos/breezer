@@ -78,7 +78,8 @@ class UserServiceImplTest {
     void register_throwsDuplicateUserException_WhenUserWithEmailAlreadyExists() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
 
-        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(new UserRegistrationDto()),
+        var userRegistrationDto = new UserRegistrationDto();
+        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(userRegistrationDto),
                                                                 DuplicateUserException.class);
         assertThat(exception.getMessage()).contains("User with email");
         assertThat(exception.getMessage()).contains("already exists");
@@ -89,7 +90,8 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(userRepository.findByNickname(any())).thenReturn(Optional.of(new User()));
 
-        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(new UserRegistrationDto()),
+        var userRegistrationDto = new UserRegistrationDto();
+        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(userRegistrationDto),
                                                                 DuplicateUserException.class);
         assertThat(exception.getMessage()).contains("User with nickname");
         assertThat(exception.getMessage()).contains("already exists");

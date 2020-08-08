@@ -30,6 +30,7 @@
 			**/src/main/java/com/github/vahundos/breezer/model/**,
 			**/src/main/java/com/github/vahundos/breezer/dto/**,
 			**/src/main/java/com/github/vahundos/breezer/config/DataInitializer.java,
+			**/src/main/java/com/github/vahundos/breezer/AuthorizedUser.java,
 			**/src/main/java/com/github/vahundos/breezer/BreezerApplication.java
 		</sonar.exclusions>
 	</properties>
