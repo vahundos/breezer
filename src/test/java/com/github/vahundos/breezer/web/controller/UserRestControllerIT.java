@@ -283,6 +283,12 @@ class UserRestControllerIT {
     }
 
     @Test
+    void login_returnUnauthorized_WhenAuthorizationNotValid() throws Exception {
+        mockMvc.perform(post(LOGIN_BASE_PATH))
+               .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void logout_invalidatesUserSession_WhenSessionActive() throws Exception {
         mockMvc.perform(post(BASE_PATH + "logout").header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
