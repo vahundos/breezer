@@ -1,12 +1,12 @@
 package com.github.vahundos.breezer.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.vahundos.breezer.TestData;
 import com.github.vahundos.breezer.UserFieldsName;
 import com.github.vahundos.breezer.WellFormedUserData;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
+import com.github.vahundos.breezer.dto.UserWithAuthTokenDto;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserRole;
 import com.github.vahundos.breezer.model.UserStatus;
@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Base64;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.vahundos.breezer.TestData.*;
@@ -41,8 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 @Sql(scripts = "/init-data.sql")
 class UserRestControllerIT {
-
-    private static final String AUTH_TOKEN = "authToken";
 
     private static final String HEADER_X_AUTH_TOKEN = "X-Auth-Token";
 
@@ -67,10 +64,9 @@ class UserRestControllerIT {
                                           .andExpect(status().isOk())
                                           .andReturn();
 
-        Map<String, Object> responseMap = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
-                                                                 new TypeReference<>() {
-                                                                 });
-        this.authToken = (String) responseMap.get(AUTH_TOKEN);
+        UserWithAuthTokenDto responseBody = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                                                                   UserWithAuthTokenDto.class);
+        this.authToken = responseBody.getAuthToken();
     }
 
     @Test
