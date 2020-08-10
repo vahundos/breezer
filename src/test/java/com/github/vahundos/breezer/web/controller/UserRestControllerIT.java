@@ -48,8 +48,10 @@ class UserRestControllerIT {
     private static final String BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE = "Basic authentication is supported " +
             "only for POST /users/login";
 
-    private static final String BASE_PATH = "/users/";
-    private static final String LOGIN_BASE_PATH = BASE_PATH + "login";
+    private static final String BASE_PATH = "/users";
+    private static final String LOGIN_BASE_PATH = BASE_PATH + "/login";
+    private static final String LOGOUT_BASE_PATH = BASE_PATH + "/logout";
+    private static final String REGISTER_BASE_PATH = BASE_PATH + "/register";
 
     private static final String MESSAGE_JSON_PATH = "$.message";
 
@@ -74,7 +76,7 @@ class UserRestControllerIT {
 
     @Test
     void register_createsAndReturnsRegisteredUserWithId() throws Exception {
-        mockMvc.perform(post(BASE_PATH + "register")
+        mockMvc.perform(post(REGISTER_BASE_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(HEADER_X_AUTH_TOKEN, authToken)
                                 .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
@@ -88,7 +90,7 @@ class UserRestControllerIT {
     @ParameterizedTest
     @MethodSource("provideNotWellFormedUserFields")
     void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser, String fieldName) throws Exception {
-        mockMvc.perform(post(BASE_PATH + "register")
+        mockMvc.perform(post(REGISTER_BASE_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(HEADER_X_AUTH_TOKEN, authToken)
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
@@ -185,12 +187,8 @@ class UserRestControllerIT {
 
     @Test
     void logout_invalidatesUserSession_WhenSessionActive() throws Exception {
-        mockMvc.perform(post(BASE_PATH + "logout").header(HEADER_X_AUTH_TOKEN, authToken))
+        mockMvc.perform(post(LOGOUT_BASE_PATH).header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isOk());
-
-        mockMvc.perform(get(BASE_PATH + "1").header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isUnauthorized());
     }
 }
