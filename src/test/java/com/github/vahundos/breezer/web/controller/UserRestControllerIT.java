@@ -91,6 +91,16 @@ class UserRestControllerIT {
     }
 
     @Test
+    void register_returnsBadRequestResponse_WhenMediaTypeIsNotSupported() throws Exception {
+        mockMvc.perform(post(REGISTER_BASE_PATH)
+                                .contentType(MediaType.APPLICATION_XML_VALUE)
+                                .header(HEADER_X_AUTH_TOKEN, authToken)
+                                .content("{}"))
+               .andDo(print())
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void login_returnsBadRequest_WhenRequestContainsBasicAuthenticationOnGetHttpMethod() throws Exception {
         mockMvc.perform(get(LOGIN_BASE_PATH).with(httpBasic(USERNAME, PASSWORD)))
                .andExpect(status().isBadRequest())
