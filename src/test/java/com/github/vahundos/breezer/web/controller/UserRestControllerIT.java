@@ -53,6 +53,7 @@ class UserRestControllerIT {
     private static final String ACTIVATE_PATH = BASE_PATH + "/{id}/activate";
     private static final String BAN_PATH = BASE_PATH + "/{id}/ban";
     private static final String LOGOUT_PATH = BASE_PATH + "/logout";
+    private static final String GET_USER_PICTURE_PATH = BASE_PATH + "/{userId}/picture";
 
     private static final String MESSAGE_JSON_PATH = "$.message";
 
@@ -302,5 +303,21 @@ class UserRestControllerIT {
         mockMvc.perform(get(GET_USER_PATH, 1).header(HEADER_X_AUTH_TOKEN, authToken))
                .andDo(print())
                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getPictureByUserId_ReturnsUserPicture_WhenPictureExists() throws Exception {
+        mockMvc.perform(get(GET_USER_PICTURE_PATH, 1).header(HEADER_X_AUTH_TOKEN, authToken))
+               .andDo(print())
+               .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPictureByUserId_ReturnsNotFond_WhenPictureDoesntExist() throws Exception {
+        var userId = 5L;
+        mockMvc.perform(get(GET_USER_PICTURE_PATH, userId).header(HEADER_X_AUTH_TOKEN, authToken))
+               .andDo(print())
+               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(String.format("User picture by userId=%d not found", userId))))
+               .andExpect(status().isNotFound());
     }
 }
