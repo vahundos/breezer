@@ -3,8 +3,6 @@ package com.github.vahundos.breezer.service;
 import com.github.vahundos.breezer.AuthorizedUser;
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.exception.DuplicateUserException;
-import com.github.vahundos.breezer.exception.EntityNotFoundException;
-import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
 import com.github.vahundos.breezer.model.User;
 import com.github.vahundos.breezer.model.UserRole;
 import com.github.vahundos.breezer.model.UserStatus;
@@ -32,13 +30,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User get(long id) {
-        log.debug("Getting user by id={}", id);
-        return repository.findById(id)
-                         .orElseThrow(() -> new EntityNotFoundException(format("User with id=%d not found", id)));
-    }
-
-    @Override
     public User register(UserRegistrationDto userDto) {
         log.debug("Register new user={}", userDto);
         if (repository.findByEmail(userDto.getEmail()).isPresent()) {
@@ -52,17 +43,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setStatus(UserStatus.REGISTERED);
         user.getRoles().add(UserRole.USER);
-        return repository.save(user);
-    }
-
-    @Override
-    public User updateStatus(long userId, UserStatus newStatus) {
-        log.debug("Updating status={} for userId={}", newStatus, userId);
-        if (newStatus == UserStatus.REGISTERED) {
-            throw new IncompatibleUserStatusException(newStatus);
-        }
-        User user = this.get(userId);
-        user.setStatus(newStatus);
         return repository.save(user);
     }
 

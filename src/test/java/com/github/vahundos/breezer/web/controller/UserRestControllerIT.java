@@ -73,42 +73,6 @@ class UserRestControllerIT {
     }
 
     @Test
-    void get_returnsUser_WhenUserExists() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(BASE_PATH + "1").contentType(MediaType.APPLICATION_JSON)
-                                                                  .header(HEADER_X_AUTH_TOKEN, authToken))
-                                     .andDo(print())
-                                     .andExpect(status().isOk())
-                                     .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
-                                     .andReturn();
-
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        User expectedUser = TestData.getUser1();
-        expectedUser.setPassword(null);
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
-    }
-
-    @Test
-    void get_returnsBadRequest_WhenRequestContainsBasicAuthentication() throws Exception {
-        mockMvc.perform(get(BASE_PATH + "1").header(AUTHORIZATION, AUTHENTICATION_SCHEME_BASIC + " " +
-                new String(Base64.getEncoder().encode("user:password".getBytes()))))
-               .andDo(print())
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE)));
-    }
-
-    @Test
-    void get_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        var id = 5L;
-        mockMvc.perform(get(BASE_PATH + id).contentType(MediaType.APPLICATION_JSON)
-                                           .header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isNotFound())
-               .andExpect(header().string(CONTENT_TYPE, APPLICATION_JSON_VALUE))
-               .andExpect(jsonPath(MESSAGE_JSON_PATH, equalTo(String.format("User with id=%d not found", id))))
-               .andReturn();
-    }
-
-    @Test
     void register_createsAndReturnsRegisteredUserWithId() throws Exception {
         mockMvc.perform(post(BASE_PATH + "register")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -197,72 +161,6 @@ class UserRestControllerIT {
                                                      WellFormedUserData.PASSWORD),
                              UserFieldsName.NICKNAME)
         );
-    }
-
-    @Test
-    void activate_changesUserStatusToActivated() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_PATH + "1/activate").contentType(MediaType.APPLICATION_JSON)
-                                                                           .header(HEADER_X_AUTH_TOKEN, authToken))
-                                     .andDo(print())
-                                     .andExpect(status().isOk())
-                                     .andReturn();
-
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        User expectedUser = TestData.getUser1();
-        expectedUser.setPassword(null);
-        expectedUser.setStatus(UserStatus.ACTIVATED);
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
-    }
-
-    @Test
-    void activate_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_PATH + "abc/activate").contentType(MediaType.APPLICATION_JSON)
-                                                       .header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isBadRequest())
-               .andReturn();
-    }
-
-    @Test
-    void activate_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_PATH + "5/activate").contentType(MediaType.APPLICATION_JSON)
-                                                     .header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isNotFound())
-               .andReturn();
-    }
-
-    @Test
-    void ban_changeUserStatusToBanned() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(BASE_PATH + "1/ban").contentType(MediaType.APPLICATION_JSON)
-                                                                      .header(HEADER_X_AUTH_TOKEN, authToken))
-                                     .andDo(print())
-                                     .andExpect(status().isOk())
-                                     .andReturn();
-
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        User expectedUser = TestData.getUser1();
-        expectedUser.setPassword(null);
-        expectedUser.setStatus(UserStatus.BANNED);
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(expectedUser), responseBody, false);
-    }
-
-    @Test
-    void ban_returnsBadRequestResponse_WhenIdIsNotWellFormed() throws Exception {
-        mockMvc.perform(put(BASE_PATH + "abc/ban").contentType(MediaType.APPLICATION_JSON)
-                                                  .header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isBadRequest())
-               .andReturn();
-    }
-
-    @Test
-    void ban_returnsNotFoundResponse_WhenUserDoesntExist() throws Exception {
-        mockMvc.perform(put(BASE_PATH + "5/ban").contentType(MediaType.APPLICATION_JSON)
-                                                .header(HEADER_X_AUTH_TOKEN, authToken))
-               .andDo(print())
-               .andExpect(status().isNotFound())
-               .andReturn();
     }
 
     @Test

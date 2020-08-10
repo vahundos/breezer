@@ -1,5 +1,7 @@
 package com.github.vahundos.breezer.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.vahundos.breezer.TestData;
 import com.github.vahundos.breezer.web.handler.MainExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,13 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class UserRestControllerTest {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private MockMvc mockMvc;
 
@@ -32,10 +37,11 @@ public class UserRestControllerTest {
 
     @Test
     void get_returnsInternalServerError_WhenUnexpectedExceptionOccurs() throws Exception {
-        var id = 1L;
-        when(userRestController.get(id)).thenThrow(new RuntimeException("Unexpected exception"));
+        when(userRestController.register(any()))
+                .thenThrow(new RuntimeException("Unexpected exception"));
 
-        mockMvc.perform(get("/users/" + id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON)
+                                               .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
                .andDo(print())
                .andExpect(status().isInternalServerError());
     }
