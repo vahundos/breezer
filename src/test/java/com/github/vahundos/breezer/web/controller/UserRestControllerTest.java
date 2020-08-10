@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class UserRestControllerTest {
+class UserRestControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

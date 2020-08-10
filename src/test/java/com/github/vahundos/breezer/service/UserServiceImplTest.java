@@ -2,10 +2,7 @@ package com.github.vahundos.breezer.service;
 
 import com.github.vahundos.breezer.dto.UserRegistrationDto;
 import com.github.vahundos.breezer.exception.DuplicateUserException;
-import com.github.vahundos.breezer.exception.EntityNotFoundException;
-import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
 import com.github.vahundos.breezer.model.User;
-import com.github.vahundos.breezer.model.UserStatus;
 import com.github.vahundos.breezer.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +56,8 @@ class UserServiceImplTest {
     void register_throwsDuplicateUserException_WhenUserWithEmailAlreadyExists() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User()));
 
-        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(new UserRegistrationDto()),
+        var userDto = new UserRegistrationDto();
+        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(userDto),
                                                                 DuplicateUserException.class);
         assertThat(exception.getMessage()).contains("User with email");
         assertThat(exception.getMessage()).contains("already exists");
@@ -70,7 +68,8 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(userRepository.findByNickname(any())).thenReturn(Optional.of(new User()));
 
-        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(new UserRegistrationDto()),
+        var userDto = new UserRegistrationDto();
+        DuplicateUserException exception = catchThrowableOfType(() -> userService.register(userDto),
                                                                 DuplicateUserException.class);
         assertThat(exception.getMessage()).contains("User with nickname");
         assertThat(exception.getMessage()).contains("already exists");
