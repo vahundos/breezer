@@ -2,7 +2,10 @@ package com.github.vahundos.breezer.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.vahundos.breezer.view.UserViews;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,7 +14,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")

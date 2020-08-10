@@ -1,8 +1,6 @@
 package com.github.vahundos.breezer.web.handler;
 
 import com.github.vahundos.breezer.exception.DuplicateUserException;
-import com.github.vahundos.breezer.exception.EntityNotFoundException;
-import com.github.vahundos.breezer.exception.IncompatibleUserStatusException;
 import com.github.vahundos.breezer.web.handler.validation.FieldErrors;
 import com.github.vahundos.breezer.web.handler.validation.FieldErrorsContainer;
 import lombok.AllArgsConstructor;
@@ -24,8 +22,7 @@ public class MainExceptionHandler {
 
     private static final String ERROR_MESSAGE = "Exception occurred";
 
-    @ExceptionHandler({IncompatibleUserStatusException.class, MethodArgumentTypeMismatchException.class,
-                       HttpMediaTypeNotSupportedException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpMediaTypeNotSupportedException.class})
     public ResponseEntity<ExceptionDetails> handleMethodArgumentNotValidException(Exception e) {
         log.error(ERROR_MESSAGE, e);
         return new ResponseEntity<>(new ExceptionDetails(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -42,12 +39,6 @@ public class MainExceptionHandler {
         FieldErrorsContainer holder = new FieldErrorsContainer();
         holder.add(e.getDuplicateItem(), e.getMessage());
         return new ResponseEntity<>(holder.getContainer(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ExceptionDetails> handleEntityNotFoundException(EntityNotFoundException e) {
-        log.error(ERROR_MESSAGE, e);
-        return new ResponseEntity<>(new ExceptionDetails(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
