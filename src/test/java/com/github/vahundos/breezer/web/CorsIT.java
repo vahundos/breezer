@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
-public class CorsIT {
+class CorsIT {
 
     private static final String REQUEST_PATH = "/users/login";
 
