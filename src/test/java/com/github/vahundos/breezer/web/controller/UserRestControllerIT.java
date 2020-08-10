@@ -80,14 +80,13 @@ class UserRestControllerIT {
 
     @ParameterizedTest
     @MethodSource("com.github.vahundos.breezer.NotWellFormedUserRegistrationDtoData#provideNotWellFormedUserFields")
-    void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser, String fieldName) throws Exception {
+    void register_returnsBadRequestResponse_WhenRequestBodyIsNotWellFormed(UserRegistrationDto notWellFormedUser) throws Exception {
         mockMvc.perform(post(REGISTER_BASE_PATH)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(HEADER_X_AUTH_TOKEN, authToken)
                                 .content(objectMapper.writeValueAsString(notWellFormedUser)))
                .andDo(print())
-               .andExpect(status().isBadRequest())
-               .andExpect(jsonPath("$[0].fieldName", equalTo(fieldName)));
+               .andExpect(status().isBadRequest());
     }
 
     @Test

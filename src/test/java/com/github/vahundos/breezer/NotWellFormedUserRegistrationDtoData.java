@@ -46,23 +46,23 @@ public final class NotWellFormedUserRegistrationDtoData {
                                                             "ivan_not_well_formed", WellFormedUserData.EMAIL,
                                                             WellFormedUserData.PASSWORD);
         return Stream.of(
-                Arguments.of(nullFirstName, UserFieldsName.FIRST_NAME),
-                Arguments.of(nullSecondName, UserFieldsName.SECOND_NAME),
-                Arguments.of(nullNickname, UserFieldsName.NICKNAME),
-                Arguments.of(nullEmail, UserFieldsName.EMAIL),
-                Arguments.of(nullPassword, UserFieldsName.PASSWORD),
+                Arguments.of(nullFirstName),
+                Arguments.of(nullSecondName),
+                Arguments.of(nullNickname),
+                Arguments.of(nullEmail),
+                Arguments.of(nullPassword),
 
-                Arguments.of(emptyFirstName, UserFieldsName.FIRST_NAME),
-                Arguments.of(emptySecondName, UserFieldsName.SECOND_NAME),
-                Arguments.of(emptyNickname, UserFieldsName.NICKNAME),
-                Arguments.of(emptyEmail, UserFieldsName.EMAIL),
-                Arguments.of(emptyPassword, UserFieldsName.PASSWORD),
+                Arguments.of(emptyFirstName),
+                Arguments.of(emptySecondName),
+                Arguments.of(emptyNickname),
+                Arguments.of(emptyEmail),
+                Arguments.of(emptyPassword),
 
-                Arguments.of(notWellFormedEmail, UserFieldsName.EMAIL),
-                Arguments.of(emailAlreadyExists, UserFieldsName.EMAIL),
+                Arguments.of(notWellFormedEmail),
+                Arguments.of(emailAlreadyExists),
 
-                Arguments.of(nicknameAlreadyExists, UserFieldsName.NICKNAME),
-                Arguments.of(notWellFormedNickname, UserFieldsName.NICKNAME)
+                Arguments.of(nicknameAlreadyExists),
+                Arguments.of(notWellFormedNickname)
         );
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 public class BasicAuthenticationDenyFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;
-    private BasicAuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
+    private final BasicAuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
