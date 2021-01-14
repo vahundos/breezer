@@ -19,7 +19,7 @@
 
 		<modelmapper.version>2.3.9</modelmapper.version>
 
-		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>3.8.0.2131</sonar-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
 
 		<sonar.projectKey>vahundos_breezer</sonar.projectKey>
