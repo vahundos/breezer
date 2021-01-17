@@ -12,6 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase
 public @interface IntegrationTest {
 }
