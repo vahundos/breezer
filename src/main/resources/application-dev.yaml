@@ -1,18 +1,13 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/breezer
+    url: jdbc:p6spy:postgresql://localhost:5432/breezer
     username: breezer
     password: password
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
   jpa:
     generate-ddl: true
     hibernate:
       ddl-auto: create
-    show-sql: true
-
-cors:
-  allowed-origins: 'http://localhost:8000'
-  allowed-methods: GET, POST
-  allowed-headers: Accept, Content-Type, Authorization, X-Auth-Token
 
 logging:
   level:

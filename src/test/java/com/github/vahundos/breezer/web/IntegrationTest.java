@@ -1,8 +1,9 @@
 package com.github.vahundos.breezer.web;
 
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import com.github.vahundos.breezer.test.config.P6SpyConfig;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
@@ -12,6 +13,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase
+@Import(P6SpyConfig.class)
 public @interface IntegrationTest {
 }
