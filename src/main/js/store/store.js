@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from "vue";
-import AuthService from "service/AuthService";
+import AuthService from "service/authService";
 
 Vue.use(Vuex);
 
