@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AuthenticationRestControllerIT extends AbstractControllerIT {
+class AuthenticationRestControllerIT extends AbstractControllerIT {
 
     private static final String BASIC_AUTHENTICATION_NOT_ALLOWED_MESSAGE = "Basic authentication is supported " +
             "only for POST /authentication";
