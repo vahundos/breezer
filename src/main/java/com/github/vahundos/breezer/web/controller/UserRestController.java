@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -24,21 +22,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/users", produces = APPLICATION_JSON_VALUE)
 public class UserRestController {
 
-    public static final String AUTH_TOKEN = "authToken";
-
     private final UserService service;
 
-    @PostMapping("/login")
-    public Map<String, String> login(HttpSession httpSession) {
-        return Map.of(AUTH_TOKEN, httpSession.getId());
-    }
-
-    @PostMapping("/logout")
-    public void logout(HttpSession httpSession) {
-        httpSession.invalidate();
-    }
-
-    @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     @JsonView(UserViews.WithoutSensitiveData.class)
     public ResponseEntity<User> register(@RequestBody @Valid UserRegistrationDto user) {
         return new ResponseEntity<>(service.register(user), HttpStatus.CREATED);
