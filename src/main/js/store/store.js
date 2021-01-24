@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from "vue";
-import UserService from "service/userService";
+import AuthService from "service/AuthService";
 
 Vue.use(Vuex);
 
@@ -16,14 +16,14 @@ export default new Vuex.Store({
     actions: {
         async userLogin({commit}, payload) {
             console.log(payload);
-            commit('setUserAuthToken', await UserService.login(payload.login, payload.password));
+            commit('setUserAuthToken', await AuthService.login(payload.login, payload.password));
         },
         async userLogout({commit}) {
-            await UserService.logout();
+            await AuthService.logout();
             commit('setUserAuthToken', '');
         },
         async loadAuthTokenFromStorage({commit}) {
-            commit('setUserAuthToken', UserService.loadAuthTokenFromStorage())
+            commit('setUserAuthToken', AuthService.loadAuthTokenFromStorage())
         }
     }
 })
