@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 class CorsIT {
 
-    private static final String REQUEST_PATH = "/users/login";
+    private static final String REQUEST_PATH = "/users";
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +41,7 @@ class CorsIT {
     private static Stream<Arguments> provideInvalidCorsHeaders() {
         return Stream.of(
                 Arguments.of(validCorsHeaders(h -> h.put(HttpHeaders.ORIGIN, of("http://localhost:7080")))),
-                Arguments.of(validCorsHeaders(h -> h.put(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, of(HttpMethod.DELETE.name())))),
+                Arguments.of(validCorsHeaders(h -> h.put(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, of(HttpMethod.TRACE.name())))),
                 Arguments.of(validCorsHeaders(h -> h.put(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, of("CustomHeader"))))
         );
     }

@@ -40,8 +40,8 @@ class UserRestControllerTest {
         when(userRestController.register(any()))
                 .thenThrow(new RuntimeException("Unexpected exception"));
 
-        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON)
-                                               .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
+        mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
+                                      .content(objectMapper.writeValueAsString(TestData.getUserForRegistration())))
                .andDo(print())
                .andExpect(status().isInternalServerError());
     }

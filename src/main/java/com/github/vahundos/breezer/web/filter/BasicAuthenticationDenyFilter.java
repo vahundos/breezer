@@ -2,6 +2,7 @@ package com.github.vahundos.breezer.web.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
@@ -29,7 +30,7 @@ public class BasicAuthenticationDenyFilter extends OncePerRequestFilter {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
             Map<String, String> responseBody = Map.of("message", "Basic authentication is supported only for " +
-                                                                 "POST /users/login");
+                                                                 "POST /authentication");
             response.getWriter().println(objectMapper.writeValueAsString(responseBody));
             response.getWriter().flush();
 
@@ -41,6 +42,6 @@ public class BasicAuthenticationDenyFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return "/users/login".equals(request.getRequestURI()) && "POST".equals(request.getMethod());
+        return "/authentication".equals(request.getRequestURI()) && HttpMethod.POST.name().equals(request.getMethod());
     }
 }

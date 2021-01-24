@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TestData {
+public final class TestData {
 
     public static final String USERNAME = "ivanivanov";
     public static final String PASSWORD = "password1";
