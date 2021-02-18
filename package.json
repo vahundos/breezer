@@ -40,9 +40,9 @@
     "vuex": "^3.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.12.16",
-    "@babel/plugin-transform-runtime": "7.12.15",
-    "@babel/preset-env": "7.12.16",
+    "@babel/core": "7.12.17",
+    "@babel/plugin-transform-runtime": "7.12.17",
+    "@babel/preset-env": "7.12.17",
     "@vue/test-utils": "1.0.4",
     "babel-bridge": "1.12.11",
     "babel-core": "7.0.0-bridge.0",
