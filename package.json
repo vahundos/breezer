@@ -47,7 +47,7 @@
     "babel-bridge": "1.12.11",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "26.6.3",
-    "babel-loader": "8.2.2",
+    "babel-loader": "8.2.3",
     "css-loader": "3.6.0",
     "deepmerge": "4.2.2",
     "fibers": "5.0.0",
