@@ -10257,10 +10257,10 @@ vuelidate@0.7.7:
   resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.7.tgz#5df3930a63ddecf56fde7bdacea9dbaf0c9bf899"
   integrity sha512-pT/U2lDI67wkIqI4tum7cMSIfGcAMfB+Phtqh2ttdXURwvHRBJEAQ0tVbUsW9Upg83Q5QH59bnCoXI7A9JDGnA==
 
-vuetify@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.2.4.tgz#3f82cb1694a306aac7c88bda815ad812df555bf9"
-  integrity sha512-jhSdCeatWgHrY4Bb2FTi1sFfGDrVHLmkvI7pkG9FEF9TmZ+Qq7Ts85XAft9ucwU8ybB5nDmN6s+oeHJgvL+4tA==
+vuetify@^3.0.0:
+  version "3.13.7"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.13.7.tgz#60da404ce36488e4b5337c3510a9cd5448d51d8f"
+  integrity sha512-HJ93r7kPRz9U1Xfd4vqseG1lL98LAG9a25jDZ+P4x9VEmK+ucpbQ56r2tTqeIUlCOxrl3FCmjNYL82WeRtOosA==
 
 vuex@^3.3.0:
   version "3.6.2"
